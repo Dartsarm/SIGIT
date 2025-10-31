@@ -1,0 +1,35 @@
+﻿@model IEnumerable<SIGIT.Models.Aplicacione>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Aplicaciones</h1>
+
+<p>
+    <a class="btn btn-outline-success" asp-action="Create">Crear Nuevo</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.NombreAplicacion)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.NombreAplicacion)
+            </td>
+            <td>
+                <a class="btn btn-outline-warning" asp-action="Edit" asp-route-id="@item.AplicacionId">Editar</a> |
+                <a class="btn btn-outline-info" asp-action="Details" asp-route-id="@item.AplicacionId">Detalles</a> |
+                <a class="btn btn-outline-danger" asp-action="Delete" asp-route-id="@item.AplicacionId">Eliminar</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

@@ -1,0 +1,26 @@
+﻿@model SIGIT.Models.Cargo
+
+@{
+    Layout = null; // ¡Importante! No usar el _Layout principal
+}
+@* <div class="modal-header">
+    <h5 class="modal-title" id="detailsModalLabel">Detalles del Cargo</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+</div> *@
+<div class="modal-body">
+    <div>
+        <dl class="row">
+            <dt class="col-sm-3">
+                @Html.DisplayNameFor(model => model.NombreCargo)
+            </dt>
+            <dd class="col-sm-9">
+                @Html.DisplayFor(model => model.NombreCargo)
+            </dd>
+        </dl>
+    </div>
+</div>
+<div>
+    <a class="btn btn-outline-secondary" asp-action="Index">Volver</a>
+    @* <a class="btn btn-outline-warning" data-bs-toggle="modal" data-bs-target="#genericModal" data-url="@Url.Action("Edit", new { id = Model?.CargoId })">Editar</a>
+    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cerrar</button> *@
+</div>

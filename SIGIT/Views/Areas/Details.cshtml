@@ -1,0 +1,29 @@
+﻿@model SIGIT.Models.Area
+
+@{
+    Layout = null; // ¡Importante! No usar el _Layout principal
+}
+
+<div class="modal-body">
+    <div>
+        <dl class="row">
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.NombreArea)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.NombreArea)
+            </dd>
+        </dl>
+    </div>
+</div>
+<div>
+    <a class="btn btn-outline-secondary" asp-action="Index">Volver</a>
+    @*<a class="btn btn-outline-warning" asp-action="Edit" asp-route-id="@Model?.AreaId">Editar</a> |
+<a class="btn btn-outline-secondary" asp-action="Index">Volver</a>*@
+</div>
+
+@* section Scripts {
+@{
+await Html.RenderPartialAsync("_ValidationScriptsPartial");
+}
+}*@

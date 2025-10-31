@@ -1,0 +1,158 @@
+﻿@model IEnumerable<SIGIT.ViewModels.EmpleadoListadoViewModel>
+
+@{
+    ViewData["Title"] = "Listado";
+}
+
+<h1>Listado</h1>
+
+<p>
+    <a class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#genericModal" data-url="@Url.Action("Create", "Empleados")" data-title="Nuevo Usuario">Nuevo usuario</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.NombreCompleto)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Celular)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Area)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Cargo)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Ciudad)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Estatus)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.NombreCompleto)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Celular)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Area)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Cargo)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Ciudad)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Estatus)
+                </td>
+                <td>
+                    
+                    <a class="btn btn-outline-warning" data-bs-toggle="modal" data-bs-target="#genericModal" data-url="@Url.Action("Edit", "Empleados", new { id = item.Id })" data-title="Editar Empleado">Editar</a> |
+
+                    <a class="btn btn-outline-info" data-bs-toggle="modal" data-bs-target="#genericModal" data-url="@Url.Action("Details", "Empleados", new { id = item.Id })" data-title="Detalles del empleado">Detalles</a> |
+
+                    <a class="btn btn-outline-danger" asp-action="Delete" asp-route-id="@item.Id">Eliminar</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+
+<div class="modal fade" id="genericModal" tabindex="-1" aria-labelledby="genericModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="genericModalLabel">Cargando...</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="text-center">
+                    <div class="spinner-border" role="status">
+                        <span class="visually-hidden">Cargando...</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+
+    <script>
+        $(function () {
+
+            // Carga contenido en el modal al ABRIR
+            $('#genericModal').on('show.bs.modal', function (event) {
+                var button = $(event.relatedTarget);
+                var url = button.data('url');
+                var title = button.data('title');
+
+                var modal = $(this);
+                modal.find('.modal-title').text(title || 'Cargando...');
+                modal.find('.modal-body').html('<div class="text-center"><div class="spinner-border" role="status"><span class="visually-hidden">Cargando...</span></div></div>');
+
+                if (url) {
+                    $.get(url).done(function (data) {
+                        modal.find('.modal-body').html(data);
+                        var newForm = modal.find('form');
+                        $.validator.unobtrusive.parse(newForm);
+                    });
+                }
+            });
+
+            // Enviar el formulario del modal al hacer SUBMIT
+            $('#genericModal').on('submit', 'form', function (e) {
+                e.preventDefault();
+
+                var form = $(this);
+
+                // Esta línea comprueba si el formulario es válido (ej. si la fecha requerida fue llenada) ANTES de intentar enviar al servidor.
+                if (!form.valid()) {
+                    return; 
+                }
+
+                var url = form.attr('action');
+                var formData = form.serialize();
+
+                $.post(url, formData).done(function (response) {
+
+                    // SI TIENE ÉXITO (El controlador devuelve JSON)
+                    if (typeof response === 'object' && response.success === true) {
+                       $('#genericModal').modal('hide');
+                       location.reload(); // Recarga toda la página
+                    }
+                    else {
+                    $('#genericModal').find('.modal-body').html(response);
+                    $.validator.unobtrusive.parse($('#genericModal').find('form'));
+
+                    }
+                }).fail(function (xhr, status, error) {
+                    alert('Error fatal al procesar la solicitud: ' + error);
+                });
+            });
+
+            // 3. Limpiar el modal al CERRAR
+            $('#genericModal').on('hidden.bs.modal', function () {
+                var modal = $(this);
+                modal.find('.modal-body').html('<div class="text-center"><div class="spinner-border" role="status"><span class="visually-hidden">Cargando...</span></div></div>');
+                modal.find('.modal-title').text('Cargando...');
+            });
+        });
+    </script>
+    
+}

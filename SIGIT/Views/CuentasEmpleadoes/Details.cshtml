@@ -1,0 +1,49 @@
+﻿@model SIGIT.Models.CuentasEmpleado
+
+@{
+    Layout = null;
+}
+
+<div>
+    <dl class="row">
+        <dt class="col-sm-3">
+            @Html.DisplayNameFor(model => model.Empleado)
+        </dt>
+        <dd class="col-sm-9">
+            @Html.DisplayFor(model => model.Empleado.Nombre) @Html.DisplayFor(model => model.Empleado.Apellido)
+        </dd>
+        <dt class="col-sm-3">
+            @Html.DisplayNameFor(model => model.Aplicacion)
+        </dt>
+        <dd class="col-sm-9">
+            @Html.DisplayFor(model => model.Aplicacion.NombreAplicacion)
+        </dd>
+        <dt class="col-sm-3">
+            @Html.DisplayNameFor(model => model.Usuario)
+        </dt>
+        <dd class="col-sm-9">
+            @Html.DisplayFor(model => model.Usuario)
+        </dd>
+        <dt class="col-sm-3">
+            @Html.DisplayNameFor(model => model.Contrasena)
+        </dt>
+        <dd class="col-sm-9">
+            @Html.DisplayFor(model => model.Contrasena)
+        </dd>
+        <dt class="col-sm-3">
+            @Html.DisplayNameFor(model => model.FechaCreacion)
+        </dt>
+        <dd class="col-sm-9">
+            @Html.DisplayFor(model => model.FechaCreacion)
+        </dd>
+        <dt class="col-sm-3">
+            @Html.DisplayNameFor(model => model.UltimaModificacion)
+        </dt>
+        <dd class="col-sm-9">
+            @Html.DisplayFor(model => model.UltimaModificacion)
+        </dd>
+    </dl>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cerrar</button>
+</div>

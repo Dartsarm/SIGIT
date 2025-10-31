@@ -1,0 +1,31 @@
+﻿@model SIGIT.Models.Cargo
+
+@{
+    Layout = null;
+    //ViewData["Title"] = "Edit";
+}
+
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="CargoId" />
+            <div class="form-group">
+                <label asp-for="NombreCargo" class="control-label"></label>
+                <input asp-for="NombreCargo" class="form-control" />
+                <span asp-validation-for="NombreCargo" class="text-danger"></span>
+            </div>
+            <br />
+            <div class="form-group">
+                <input type="submit" value="Guardar" class="btn btn-outline-success" /> |
+                <a class="btn btn-outline-secondary" asp-action="Index">Volver</a>
+            </div>
+        </form>
+    </div>
+</div>
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+}

@@ -1,0 +1,71 @@
+﻿@model SIGIT.Models.CuentasEmpleado
+
+@{
+    Layout = null;
+}
+
+<div class="container-fluid">
+    <div class="col-md-12">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="CuentaId" />
+
+            <div class="container text-start">
+                <div class="row">
+                    <div class="col-md-6">
+                        <label asp-for="EmpleadoId" class="control-label"></label>
+                        <select asp-for="EmpleadoId" class="form-select" asp-items="ViewBag.EmpleadoId" required>
+                            <option value="">-- Seleccione un Empleado --</option>
+                        </select>
+                        <span asp-validation-for="EmpleadoId" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6">
+                        <label asp-for="AplicacionId" class="control-label"></label>
+                        <select asp-for="AplicacionId" class="form-select" asp-items="ViewBag.AplicacionId" required>
+                            <option value="">-- Seleccione una Aplicación --</option>
+                        </select>
+                        <span asp-validation-for="AplicacionId" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="container text-start">
+                <div class="row">
+                    <div class="col-md-6">
+                        <label asp-for="Usuario" class="control-label"></label>
+                        <input asp-for="Usuario" class="form-control" required />
+                        <span asp-validation-for="Usuario" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6">
+                        <label asp-for="Contrasena" class="control-label"></label>
+                        <input asp-for="Contrasena" class="form-control" required />
+                        <span asp-validation-for="Contrasena" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="container text-start">
+                <div class="row">
+                    <div class="col-md-6">
+                        <label asp-for="FechaCreacion" class="control-label"></label>
+                        <input asp-for="FechaCreacion" class="form-control" readonly />
+                    </div>
+                    <div class="col-md-6">
+                        <label asp-for="UltimaModificacion" class="control-label"></label>
+                        <input asp-for="UltimaModificacion" class="form-control" readonly />
+                    </div>
+                </div>
+            </div>
+            <br />
+            <div class="form-group">
+                <input type="submit" value="Guardar Cambios" class="btn btn-outline-success" /> |
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+@{
+    // CORREGIDO: Esta sección DEBE ser eliminada de las vistas parciales.
+    // await Html.RenderPartialAsync("_ValidationScriptsPartial");
+}

@@ -1,0 +1,142 @@
+﻿@model SIGIT.Models.Empleado
+
+@{
+    Layout = null; // ¡Importante! No usar el _Layout principal
+}
+
+<div class="container-fluid">
+    <div class="col-md-12">
+        <form asp-action="Create">
+           
+            
+            <div asp-validation-summary="All" class="alert alert-danger"></div>
+
+            <div class="col-4">
+                <label asp-for="Cedula" class="form-label text-start"></label>
+                <input asp-for="Cedula" class="form-control" maxlength="10" aria-describedby="DocumentHelpInline">
+                <div id="DocumentHelpInline" class="form-text text-end text-success">
+                    Máximo 10 caracteres.
+                </div>
+                <span asp-validation-for="Cedula" class="text-danger"></span>
+            </div>
+
+            <div class="container text-start">
+                <div class="row">
+                    <div class="col-md-6">
+                        <label asp-for="Nombre" class="control-label text-start"></label>
+                        <input asp-for="Nombre" class="form-control" required />
+                        <span asp-validation-for="Nombre" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6">
+                        <label asp-for="SegundoNombre" class="control-label text-start"></label>
+                        <input asp-for="SegundoNombre" class="form-control" />
+                        <span asp-validation-for="SegundoNombre" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="container text-start">
+                <div class="row">
+                    <div class="col">
+                        <label asp-for="Apellido" class="control-label"></label>
+                        <input asp-for="Apellido" class="form-control" required />
+                        <span asp-validation-for="Apellido" class="text-danger"></span>
+                    </div>
+                    <div class="col">
+                        <label asp-for="SegundoApellido" class="control-label"></label>
+                        <input asp-for="SegundoApellido" class="form-control" />
+                        <span asp-validation-for="SegundoApellido" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="container text-start">
+                <div class="row">
+                    <div class="col">
+                        <label asp-for="Celular" class="control-label"></label>
+                        <input asp-for="Celular" class="form-control" required />
+                        <span asp-validation-for="Celular" class="text-danger"></span>
+                    </div>
+                    <div class="col">
+                        <label asp-for="CorreoPersonal" class="control-label"></label>
+                        <input asp-for="CorreoPersonal" class="form-control" required />
+                        <span asp-validation-for="CorreoPersonal" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+
+         
+            <div class="container text-start">
+                <div class="row">
+                    <div class="col">
+                        <label asp-for="CargoId" class="control-label"></label>
+                        <select asp-for="CargoId" class="form-select" asp-items="ViewBag.CargoId" required>
+                            <option value="">--Seleccione un Cargo--</option>
+                        </select>
+                        <span asp-validation-for="CargoId" class="text-danger"></span>
+                    </div>
+                    <div class="col">
+                        <label asp-for="AreaId" class="control-label"></label>
+                        <select asp-for="AreaId" class="form-select" asp-items="ViewBag.AreaId" required>
+                            <option value="">--Seleccione una área--</option>
+                        </select>
+                        <span asp-validation-for="AreaId" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="container text-start">
+                <div class="row">
+                    <div class="col">
+                        <label asp-for="CiudadId" class="control-label"></label>
+                        <select asp-for="CiudadId" class="form-select" asp-items="ViewBag.CiudadId" required>
+                            <option value="">--Seleccione una Ciudad--</option>
+                        </select>
+                        <span asp-validation-for="CiudadId" class="text-danger"></span>
+                    </div>
+                    <div class="col">
+                        <label asp-for="CompaniaId" class="control-label"></label>
+                        <select asp-for="CompaniaId" class="form-select" asp-items="ViewBag.CompaniaId" required>
+                            <option value="">--Seleccione una Compañía--</option>
+                        </select>
+                        <span asp-validation-for="CompaniaId" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="container text-start">
+                <div class="row">
+                    <div class="col-6">
+                        <label asp-for="EstatusId" class="control-label"></label>
+                        <select asp-for="EstatusId" class="form-select" asp-items="ViewBag.EstatusId" required>
+                            <option value="">--Seleccione un Estado--</option>
+                        </select>
+                        <span asp-validation-for="EstatusId" class="text-danger"></span>
+                    </div>
+                    <div class="col-6"></div>
+                </div>
+            </div>
+
+            <div class="container text-start">
+                <div class="row">
+                    <div class="col">
+                        <label asp-for="FechaIngreso" class="control-label"></label>
+                        <input asp-for="FechaIngreso" type="date" class="form-control" required />
+                        <span asp-validation-for="FechaIngreso" class="text-danger"></span>
+                    </div>
+                    <div class="col">
+                        <label asp-for="FechaRetiro" class="control-label"></label>
+                        <input asp-for="FechaRetiro" type="date" class="form-control" />
+                        <span asp-validation-for="FechaRetiro" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+
+            <br />
+            <div class="form-group">
+                <button type="submit" class="btn btn-outline-success">Guardar</button>
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+            </div>
+        </form>
+    </div>
+</div>

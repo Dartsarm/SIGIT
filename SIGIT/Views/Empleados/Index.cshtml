@@ -1,0 +1,192 @@
+﻿@model IEnumerable<SIGIT.Models.Empleado>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a class="btn btn-outline-success" asp-action="Create" data-bs-toggle="modal" data-bs-target="#genericModal" data-url="@Url.Action("Create")" data-title="Nuevo Empleado">Nuevo Empleado</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Cedula)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Nombre)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.SegundoNombre)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Apellido)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.SegundoApellido)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Celular)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CorreoPersonal)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FechaIngreso)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FechaRetiro)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FechaRegistro)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Area)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Cargo)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Ciudad)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Compania)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Estatus)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Cedula)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Nombre)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.SegundoNombre)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Apellido)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.SegundoApellido)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Celular)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CorreoPersonal)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.FechaIngreso)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.FechaRetiro)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.FechaRegistro)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Area.AreaId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Cargo.CargoId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Ciudad.CiudadId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Compania.CompaniaId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Estatus.EstatusId)
+            </td>
+            <td>
+                <a class="btn btn-outline-warning" data-bs-toggle="modal" data-bs-target="#genericModal" data-url="@Url.Action("Edit", new { id = item.EmpleadoId })" data-title="Editar Empleado">Editar</a> |
+                <a class="btn btn-outline-info" data-bs-toggle="#genericModal" data-url="@Url.Action("Details", new { id = item.EmpleadoId })" data-title="Detalles del empleado">Detalles</a> |
+                <a asp-action="Delete" asp-route-id="@item.EmpleadoId">Eliminar</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
+
+<div class="modal fade" id="genericModal" tabindex="-1" aria-labelledby="genericModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="genericModalLabel">Cargando...</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Cargando...
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script>
+        $(function () {
+            $('#genericModal').on('show.bs.modal', function (event) {
+                var button = $(event.relatedTarget); 
+                var url = button.data('url');      
+                var title = button.data('title');  // Extrae el título del atributo data-title
+
+                var modal = $(this);
+                modal.find('.modal-title').text(title || 'Cargando...'); // Usa el título o un valor por defecto
+                modal.find('.modal-body').html('Cargando...');
+
+                if (url) {
+                    $.get(url).done(function (data) {
+                        modal.find('.modal-body').html(data);
+                    });
+                }
+            });
+
+            $('#genericModal').on('hidden.bs.modal', function () {
+                var modal = $(this);
+                modal.find('.modal-body').html('Cargando...');
+                modal.find('.modal-title').text('Cargando...');
+            });
+
+            // Manejar la sumisión del formulario dentro del modal
+            $('#genericModal').on('submit', 'form', function (e) {
+                e.preventDefault();
+
+                var form = $(this);
+                var url = form.attr('action');
+                var formData = form.serialize();
+
+                $.post(url, formData).done(function (response) {
+                    // Si la respuesta es una vista parcial (contiene formulario o summary de validación)
+                    if (typeof response === 'string' && (response.indexOf('<form') >= 0 || response.indexOf('validation-summary-valid') >= 0)) {
+                        form.replaceWith(response);
+                        $.validator.unobtrusive.parse(form); // Re-parsear validaciones
+                    } else if (typeof response === 'object' && response.success === true) {
+                        // Si la respuesta es JSON con success: true
+                        $('#genericModal').modal('hide');
+                        location.reload();
+                    } else {
+                        // Considerar cualquier otra respuesta como éxito y cerrar/recargar
+                        $('#genericModal').modal('hide');
+                        location.reload();
+                    }
+                }).fail(function (xhr, status, error) {
+                    alert('Error al procesar la solicitud: ' + error);
+                });
+            });
+        });
+    </script>
+}

@@ -1,0 +1,23 @@
+﻿@model SIGIT.Models.Compania
+
+@{
+    Layout = null;
+    //ViewData["Title"] = "Details";
+}
+<div class="modal-body">
+    <div>
+        <dl class="row">
+        <dt class = "col-sm-3">
+            @Html.DisplayNameFor(model => model.NombreCompania)
+        </dt>
+        <dd class = "col-sm-7">
+            @Html.DisplayFor(model => model.NombreCompania)
+        </dd>
+    </dl>
+</div>
+</div>
+<div>
+    <a class="btn btn-outline-secondary" asp-action="Index">Volver</a>
+    @* <a asp-action="Edit" asp-route-id="@Model?.CompaniaId">Edit</a> |
+    <a asp-action="Index">Back to List</a> *@
+</div>

@@ -1,0 +1,94 @@
+﻿@model IEnumerable<SIGIT.Models.Compania>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Compañías</h1>
+
+<p>
+    <a class="btn btn-outline-success" asp-action="Create" data-bs-toggle="modal" data-bs-target="#genericModal" data-url="@Url.Action("Create")" data-title="Agregar Compañía">Agregar Compañía</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.NombreCompania)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.NombreCompania)
+            </td>
+            <td>
+                <a class="btn btn-outline-warning" data-bs-toggle="modal" data-bs-target="#genericModal" data-url="@Url.Action("Edit", new { id = item.CompaniaId })" data-title="Editar Compañía">Editar</a> |
+                <a class="btn btn-outline-info" data-bs-toggle="modal" data-bs-target="#genericModal" data-url="@Url.Action("Details", new { id = item.CompaniaId })" data-title="Detalles Compañía">Detalles</a>
+                <a class="btn btn-outline-danger" asp-action="Delete" asp-route-id="@item.CompaniaId">Eliminar</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script>
+        $(function () {
+            $('#genericModal').on('show.bs.modal', function (event) {
+                var button = $(event.relatedTarget); // Botón que dispara el modal
+                var url = button.data('url');      // URL para cargar el contenido
+                var title = button.data('title');  // Extrae el título del atributo data-title
+
+                var modal = $(this);
+                modal.find('.modal-title').text(title || 'Cargando...'); // Usa el título o un valor por defecto
+                modal.find('.modal-body').html('Cargando...');
+
+                if (url) {
+                    $.get(url).done(function (data) {
+                        modal.find('.modal-body').html(data);
+                    });
+                }
+            });
+
+            $('#genericModal').on('hidden.bs.modal', function () {
+                var modal = $(this);
+                modal.find('.modal-body').html('Cargando...');
+                modal.find('.modal-title').text('Cargando...');
+            });
+
+            // Manejar la sumisión del formulario dentro del modal
+            $('#genericModal').on('submit', 'form', function (e) {
+                e.preventDefault();
+
+                var form = $(this);
+                var url = form.attr('action');
+                var formData = form.serialize();
+
+                $.post(url, formData).done(function (response) {
+                    // Si la respuesta es una vista parcial (contiene formulario o summary de validación)
+                    if (typeof response === 'string' && (response.indexOf('<form') >= 0 || response.indexOf('validation-summary-valid') >= 0)) {
+                        form.replaceWith(response);
+                        $.validator.unobtrusive.parse(form); // Re-parsear validaciones
+                    } else if (typeof response === 'object' && response.success === true) {
+                        // Si la respuesta es JSON con success: true
+                        $('#genericModal').modal('hide');
+                        location.reload();
+                    } else {
+                        // Considerar cualquier otra respuesta como éxito y cerrar/recargar
+                        $('#genericModal').modal('hide');
+                        location.reload();
+                    }
+                }).fail(function (xhr, status, error) {
+                    alert('Error al procesar la solicitud: ' + error);
+                });
+            });
+        });
+    </script>
+}

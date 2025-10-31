@@ -1,0 +1,22 @@
+﻿@model SIGIT.Models.Estatus
+
+@{
+    Layout = null;
+}
+
+<div class="modal-body">
+    <div>
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.NombreEstatus)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.NombreEstatus)
+        </dd>
+    </dl>
+</div>
+</div>
+<div>
+    @* <a  asp-action="Edit" asp-route-id="@Model?.EstatusId">Edit</a> | *@
+    <a class="btn btn-outline-secondary" asp-action="Index">Volver</a>
+</div>
