@@ -4,10 +4,10 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+<h1>Usuarios del sistema</h1>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a class="btn btn-outline-success" asp-action="Create" data-bs-toggle="modal" data-bs-target="#genericModal" data-url="@Url.Action("Create")" data-title="Crear Usuario">Crear Usuario</a>
 </p>
 <table class="table">
     <thead>
@@ -16,22 +16,10 @@
                 @Html.DisplayNameFor(model => model.Cedula)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Nombre)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.SegundoNombre)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Apellido)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.SegundoApellido)
+                Nombre Completo
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Email)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Celular)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.UsuarioLogin)
@@ -45,10 +33,6 @@
             <th>
                 @Html.DisplayNameFor(model => model.Activo)
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.FechaRegistro)
-            </th>
-            
             <th></th>
         </tr>
     </thead>
@@ -60,45 +44,121 @@
                     @Html.DisplayFor(modelItem => item.Cedula)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Nombre)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.SegundoNombre)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Apellido)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.SegundoApellido)
+                    @{
+                        var partes = new[] { item.Nombre, item.SegundoNombre, item.Apellido, item.SegundoApellido };
+                        @string.Join(" ", partes.Where(s => !string.IsNullOrWhiteSpace(s)))
+                    }
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.Email)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Celular)
-                </td>
-                <td>
                     @Html.DisplayFor(modelItem => item.UsuarioLogin)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.PasswordHash)
+                    <span>****</span>
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Rol.RolId)
+                    @Html.DisplayFor(modelItem => item.Rol.NombreRol)
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.Activo)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.FechaRegistro)
-                </td>
-                
-                <td>
-                    <a asp-action="Edit" asp-route-id="@item.UsuarioSistemaId">Edit</a> |
-                    <a asp-action="Details" asp-route-id="@item.UsuarioSistemaId">Details</a> |
-                    <a asp-action="Delete" asp-route-id="@item.UsuarioSistemaId">Delete</a>
+                    <a class="btn btn-outline-warning" data-bs-toggle="modal" data-bs-target="#genericModal" data-url="@Url.Action("Edit", new { id = item.UsuarioSistemaId })" data-title="Editar Usuario">Editar</a>
+                    <a class="btn btn-outline-info" data-bs-toggle="modal" data-bs-target="#genericModal" data-url="@Url.Action("Details", new { id = item.UsuarioSistemaId })" data-title="Detalles Usuario">Detalles</a>
+                    <a class="btn btn-outline-danger" asp-action="Delete" asp-route-id="@item.UsuarioSistemaId">Eliminar</a>
                 </td>
             </tr>
         }
     </tbody>
 </table>
+
+
+<div class="modal fade" id="genericModal" tabindex="-1" aria-labelledby="genericModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="genericModalLabel">Cargando...</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="text-center">
+                    <div class="spinner-border" role="status">
+                        <span class="visually-hidden">Cargando...</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        // Carga los scripts de validación
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script>
+        $(function () {
+
+            // Cargar contenido en el modal al ABRIR
+            $('#genericModal').on('show.bs.modal', function (event) {
+                var button = $(event.relatedTarget);
+                var url = button.data('url');
+                var title = button.data('title');
+
+                var modal = $(this);
+                modal.find('.modal-title').text(title || 'Cargando...');
+                modal.find('.modal-body').html('<div class="text-center"><div class="spinner-border" role="status"><span class="visually-hidden">Cargando...</span></div></div>');
+
+                if (url) {
+                    $.get(url).done(function (data) {
+                        modal.find('.modal-body').html(data);
+
+                        // Activar la validación en el formulario cargado
+                        var newForm = modal.find('form');
+                        $.validator.unobtrusive.parse(newForm);
+                    });
+                }
+            });
+
+            // Enviar el formulario del modal al hacer SUBMIT
+            $('#genericModal').on('submit', 'form', function (e) {
+                e.preventDefault();
+
+                var form = $(this);
+
+                // Validar antes de enviar
+                if (!form.valid()) {
+                    return;
+                }
+
+                var url = form.attr('action');
+                var formData = form.serialize();
+
+                $.post(url, formData).done(function (response) {
+                    // SI TIENE ÉXITO (El controlador devuelve JSON)
+                    if (typeof response === 'object' && response.success === true) {
+                        $('#genericModal').modal('hide');
+                        location.reload();
+                    }
+                    // SI FALLA LA VALIDACIÓN (El controlador devuelve la PartialView)
+                    else {
+                        $('#genericModal').find('.modal-body').html(response);
+                        $.validator.unobtrusive.parse($('#genericModal').find('form'));
+                    }
+                }).fail(function (xhr, status, error) {
+                    alert('Error fatal al procesar la solicitud: ' + error);
+                });
+            });
+
+            // Limpiar el modal al CERRAR
+            $('#genericModal').on('hidden.bs.modal', function () {
+                var modal = $(this);
+                modal.find('.modal-body').html('<div class="text-center"><div class="spinner-border" role="status"><span class="visually-hidden">Cargando...</span></div></div>');
+                modal.find('.modal-title').text('Cargando...');
+            });
+        });
+    </script>
+}

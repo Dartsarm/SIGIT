@@ -36,36 +36,46 @@ namespace SIGIT.Controllers
             var usuariosSistema = await _context.UsuariosSistemas
                 .Include(u => u.Rol)
                 .FirstOrDefaultAsync(m => m.UsuarioSistemaId == id);
+
             if (usuariosSistema == null)
             {
                 return NotFound();
             }
 
-            return View(usuariosSistema);
+            return PartialView(usuariosSistema);
         }
 
         // GET: UsuariosSistemas/Create
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
-            ViewData["RolId"] = new SelectList(_context.Roles, "RolId", "RolId");
-            return View();
+            // CORREGIDO: Llama al método para poblar los dropdowns
+            await PopulateDropdowns();
+            return PartialView();
         }
 
         // POST: UsuariosSistemas/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("UsuarioSistemaId,Cedula,Nombre,SegundoNombre,Apellido,SegundoApellido,UsuarioLogin,Email,Celular,PasswordHash,RolId,Activo,FechaRegistro")] UsuariosSistema usuariosSistema)
+        public async Task<IActionResult> Create([Bind("UsuarioSistemaId,Cedula,Nombre,SegundoNombre,Apellido,SegundoApellido,UsuarioLogin,Email,Celular,PasswordHash,RolId,Activo")] UsuariosSistema usuariosSistema)
         {
+            // CORREGIDO: Asignar fechas y remover validaciones de servidor
+            usuariosSistema.FechaRegistro = DateTime.Now;
+            ModelState.Remove("FechaRegistro");
+            ModelState.Remove("Rol"); // Ignorar el objeto de navegación nulo
+
             if (ModelState.IsValid)
             {
+                // Aquí deberías HASH la contraseña antes de guardar
+                // Ejemplo: usuariosSistema.PasswordHash = HashPassword(usuariosSistema.PasswordHash);
+
                 _context.Add(usuariosSistema);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return Json(new { success = true }); // Devuelve Éxito
             }
-            ViewData["RolId"] = new SelectList(_context.Roles, "RolId", "RolId", usuariosSistema.RolId);
-            return View(usuariosSistema);
+
+            // Si hay error, repoblar dropdowns y devolver vista con errores
+            await PopulateDropdowns(usuariosSistema);
+            return PartialView(usuariosSistema);
         }
 
         // GET: UsuariosSistemas/Edit/5
@@ -81,27 +91,40 @@ namespace SIGIT.Controllers
             {
                 return NotFound();
             }
-            ViewData["RolId"] = new SelectList(_context.Roles, "RolId", "RolId", usuariosSistema.RolId);
-            return View(usuariosSistema);
+
+            // CORREGIDO: Llama al método para poblar los dropdowns
+            await PopulateDropdowns(usuariosSistema);
+            return PartialView(usuariosSistema);
         }
 
         // POST: UsuariosSistemas/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("UsuarioSistemaId,Cedula,Nombre,SegundoNombre,Apellido,SegundoApellido,UsuarioLogin,Email,Celular,PasswordHash,RolId,Activo,FechaRegistro")] UsuariosSistema usuariosSistema)
+        public async Task<IActionResult> Edit(int id, [Bind("UsuarioSistemaId,Cedula,Nombre,SegundoNombre,Apellido,SegundoApellido,UsuarioLogin,Email,Celular,PasswordHash,RolId,Activo")] UsuariosSistema usuariosSistema)
         {
             if (id != usuariosSistema.UsuarioSistemaId)
             {
                 return NotFound();
             }
 
+            // CORREGIDO: Remover validaciones de servidor
+            ModelState.Remove("FechaRegistro");
+            ModelState.Remove("Rol");
+
             if (ModelState.IsValid)
             {
                 try
                 {
+                    // Aquí deberías verificar si la contraseña cambió para volver a Hashearla
+                    // if (PasswordHaCambiado) {
+                    //    usuariosSistema.PasswordHash = HashPassword(usuariosSistema.PasswordHash);
+                    // }
+
                     _context.Update(usuariosSistema);
+
+                    // Proteger FechaRegistro para que no se modifique
+                    _context.Entry(usuariosSistema).Property(x => x.FechaRegistro).IsModified = false;
+
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
@@ -115,10 +138,12 @@ namespace SIGIT.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                return Json(new { success = true });
             }
-            ViewData["RolId"] = new SelectList(_context.Roles, "RolId", "RolId", usuariosSistema.RolId);
-            return View(usuariosSistema);
+
+            // Si hay error, repoblar dropdowns y devolver vista con errores
+            await PopulateDropdowns(usuariosSistema);
+            return PartialView(usuariosSistema);
         }
 
         // GET: UsuariosSistemas/Delete/5
@@ -132,6 +157,7 @@ namespace SIGIT.Controllers
             var usuariosSistema = await _context.UsuariosSistemas
                 .Include(u => u.Rol)
                 .FirstOrDefaultAsync(m => m.UsuarioSistemaId == id);
+
             if (usuariosSistema == null)
             {
                 return NotFound();
@@ -158,6 +184,23 @@ namespace SIGIT.Controllers
         private bool UsuariosSistemaExists(int id)
         {
             return _context.UsuariosSistemas.Any(e => e.UsuarioSistemaId == id);
+        }
+
+        // --- MÉTODO AYUDANTE PARA POBLAR DROPDOWNS ---
+        private async Task PopulateDropdowns(UsuariosSistema? usuariosSistema = null)
+        {
+            var roles = await _context.Roles.ToListAsync();
+
+            if (usuariosSistema == null)
+            {
+                // CORREGIDO: Cargar "NombreRol"
+                ViewBag.RolId = new SelectList(roles, "RolId", "NombreRol");
+            }
+            else
+            {
+                // CORREGIDO: Cargar "NombreRol" y seleccionar el actual
+                ViewBag.RolId = new SelectList(roles, "RolId", "NombreRol", usuariosSistema.RolId);
+            }
         }
     }
 }

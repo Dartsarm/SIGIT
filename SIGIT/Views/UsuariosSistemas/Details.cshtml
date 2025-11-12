@@ -1,90 +1,66 @@
 ﻿@model SIGIT.Models.UsuariosSistema
 
 @{
-    ViewData["Title"] = "Details";
+    Layout = null;
 }
 
-<h1>Details</h1>
-
-<div>
-    <h4>UsuariosSistema</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Cedula)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Cedula)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Nombre)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Nombre)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.SegundoNombre)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.SegundoNombre)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Apellido)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Apellido)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.SegundoApellido)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.SegundoApellido)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.UsuarioLogin)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.UsuarioLogin)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Email)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Email)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Celular)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Celular)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.PasswordHash)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.PasswordHash)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Activo)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Activo)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.FechaRegistro)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.FechaRegistro)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Rol)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Rol.RolId)
-        </dd>
-    </dl>
+<div class="modal-body">
+    <div>
+        <dl class="row">
+            <dt class="col-sm-3">
+                @Html.DisplayNameFor(model => model.Cedula)
+            </dt>
+            <dd class="col-sm-9">
+                @Html.DisplayFor(model => model.Cedula)
+            </dd>
+            <dt class="col-sm-3">
+                Nombre Completo
+            </dt>
+            <dd class="col-sm-9">
+                @{
+                    var partes = new[] { Model.Nombre, Model.SegundoNombre, Model.Apellido, Model.SegundoApellido };
+                    @string.Join(" ", partes.Where(s => !string.IsNullOrWhiteSpace(s)))
+                }
+            </dd>
+            <dt class="col-sm-3">
+                @Html.DisplayNameFor(model => model.UsuarioLogin)
+            </dt>
+            <dd class="col-sm-9">
+                @Html.DisplayFor(model => model.UsuarioLogin)
+            </dd>
+            <dt class="col-sm-3">
+                @Html.DisplayNameFor(model => model.Email)
+            </dt>
+            <dd class="col-sm-9">
+                @Html.DisplayFor(model => model.Email)
+            </dd>
+            <dt class="col-sm-3">
+                @Html.DisplayNameFor(model => model.Celular)
+            </dt>
+            <dd class="col-sm-9">
+                @Html.DisplayFor(model => model.Celular)
+            </dd>
+            <dt class="col-sm-3">
+                @Html.DisplayNameFor(model => model.Activo)
+            </dt>
+            <dd class="col-sm-9">
+                @Html.DisplayFor(model => model.Activo)
+            </dd>
+            <dt class="col-sm-3">
+                @Html.DisplayNameFor(model => model.FechaRegistro)
+            </dt>
+            <dd class="col-sm-9">
+                @Html.DisplayFor(model => model.FechaRegistro)
+            </dd>
+            <dt class="col-sm-3">
+                @Html.DisplayNameFor(model => model.Rol)
+            </dt>
+            <dd class="col-sm-9">
+                @Html.DisplayFor(model => model.Rol.NombreRol)
+            </dd>
+        </dl>
+    </div>
 </div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model?.UsuarioSistemaId">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+<div class="modal-footer">
+    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cerrar</button>
 </div>
