@@ -65,6 +65,8 @@ namespace SIGIT.Controllers
                 .Include(e => e.Ciudad)
                 .Include(e => e.Compania)
                 .Include(e => e.Estatus)
+                .Include(e => e.CuentasEmpleados) //Adiciono para llamar los datos de las cuentas de empleados asociadas a cada uno de ellos.
+                .ThenInclude(cuenta => cuenta.Aplicacion)
                 .FirstOrDefaultAsync(m => m.EmpleadoId == id);
 
             if (empleado == null)

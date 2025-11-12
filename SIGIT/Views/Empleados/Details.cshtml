@@ -6,100 +6,118 @@
 
 <div class="modal-body">
     <div>
-    <dl class="row">
-        <dt class = "col-sm-3">
-            @Html.DisplayNameFor(model => model.Cedula)
-        </dt>
-        <dd class = "col-sm-9">
-            @Html.DisplayFor(model => model.Cedula)
-        </dd>
-        <dt class = "col-sm-3">
-            @Html.DisplayNameFor(model => model.Nombre)
-        </dt>
-        <dd class = "col-sm-9">
-            @Html.DisplayFor(model => model.Nombre)
-        </dd>
-        <dt class = "col-sm-3">
-            @Html.DisplayNameFor(model => model.SegundoNombre)
-        </dt>
-        <dd class = "col-sm-9">
-            @Html.DisplayFor(model => model.SegundoNombre)
-        </dd>
-        <dt class = "col-sm-3">
-            @Html.DisplayNameFor(model => model.Apellido)
-        </dt>
-        <dd class = "col-sm-9">
-            @Html.DisplayFor(model => model.Apellido)
-        </dd>
-        <dt class = "col-sm-3">
-            @Html.DisplayNameFor(model => model.SegundoApellido)
-        </dt>
-        <dd class = "col-sm-9">
-            @Html.DisplayFor(model => model.SegundoApellido)
-        </dd>
-        <dt class = "col-sm-3">
-            @Html.DisplayNameFor(model => model.Celular)
-        </dt>
-        <dd class = "col-sm-9">
-            @Html.DisplayFor(model => model.Celular)
-        </dd>
-        <dt class = "col-sm-3">
-            @Html.DisplayNameFor(model => model.CorreoPersonal)
-        </dt>
-        <dd class = "col-sm-9">
-            @Html.DisplayFor(model => model.CorreoPersonal)
-        </dd>
-        <dt class = "col-sm-3">
-            @Html.DisplayNameFor(model => model.FechaIngreso)
-        </dt>
-        <dd class = "col-sm-9">
-            @Html.DisplayFor(model => model.FechaIngreso)
-        </dd>
-        <dt class = "col-sm-3">
-            @Html.DisplayNameFor(model => model.FechaRetiro)
-        </dt>
-        <dd class = "col-sm-9">
-            @Html.DisplayFor(model => model.FechaRetiro)
-        </dd>
-        <dt class = "col-sm-3">
-            @Html.DisplayNameFor(model => model.FechaRegistro)
-        </dt>
-        <dd class = "col-sm-9">
-            @Html.DisplayFor(model => model.FechaRegistro)
-        </dd>
-        <dt class = "col-sm-3">
-            @Html.DisplayNameFor(model => model.Area)
-        </dt>
-        <dd class = "col-sm-9">
-            @Html.DisplayFor(model => model.Area.NombreArea)
-        </dd>
-        <dt class = "col-sm-3">
-            @Html.DisplayNameFor(model => model.Cargo)
-        </dt>
-        <dd class = "col-sm-9">
-            @Html.DisplayFor(model => model.Cargo.NombreCargo)
-        </dd>
-        <dt class = "col-sm-3">
-            @Html.DisplayNameFor(model => model.Ciudad)
-        </dt>
-        <dd class = "col-sm-9">
-            @Html.DisplayFor(model => model.Ciudad.NombreCiudad)
-        </dd>
-        <dt class = "col-sm-3">
-            @Html.DisplayNameFor(model => model.Compania)
-        </dt>
-        <dd class = "col-sm-9">
-            @Html.DisplayFor(model => model.Compania.NombreCompania)
-        </dd>
-        <dt class = "col-sm-3">
-            @Html.DisplayNameFor(model => model.Estatus)
-        </dt>
-        <dd class = "col-sm-9">
-            @Html.DisplayFor(model => model.Estatus.NombreEstatus)
-        </dd>
-    </dl>
+        <dl class="row">
+            <dt class="col-sm-3">
+                @Html.DisplayNameFor(model => model.Cedula)
+            </dt>
+            <dd class="col-sm-9">
+                @Html.DisplayFor(model => model.Cedula)
+            </dd>
+            <dt class="col-sm-3">
+                @Html.DisplayNameFor(model => model.Nombre)
+            </dt>
+            <dd class="col-sm-9">
+                @{
+                    var partesDelNombre = new[] { Model.Nombre, Model.SegundoNombre, Model.Apellido, Model.SegundoApellido };
+                    var partesNoVacias = partesDelNombre.Where(s => !string.IsNullOrWhiteSpace(s));
+                    @string.Join(" ", partesNoVacias)
+                }
+            </dd>
+            <dt class="col-sm-3">
+                @Html.DisplayNameFor(model => model.Celular)
+            </dt>
+            <dd class="col-sm-9">
+                @Html.DisplayFor(model => model.Celular)
+            </dd>
+            <dt class="col-sm-3">
+                @Html.DisplayNameFor(model => model.CorreoPersonal)
+            </dt>
+            <dd class="col-sm-9">
+                @Html.DisplayFor(model => model.CorreoPersonal)
+            </dd>
+            <dt class="col-sm-3">
+                @Html.DisplayNameFor(model => model.FechaIngreso)
+            </dt>
+            <dd class="col-sm-9">
+                @Html.DisplayFor(model => model.FechaIngreso)
+            </dd>
+            <dt class="col-sm-3">
+                @Html.DisplayNameFor(model => model.FechaRetiro)
+            </dt>
+            <dd class="col-sm-9">
+                @Html.DisplayFor(model => model.FechaRetiro)
+            </dd>
+            <dt class="col-sm-3">
+                @Html.DisplayNameFor(model => model.FechaRegistro)
+            </dt>
+            <dd class="col-sm-9">
+                @Html.DisplayFor(model => model.FechaRegistro)
+            </dd>
+            <dt class="col-sm-3">
+                @Html.DisplayNameFor(model => model.Area)
+            </dt>
+            <dd class="col-sm-9">
+                @Html.DisplayFor(model => model.Area.NombreArea)
+            </dd>
+            <dt class="col-sm-3">
+                @Html.DisplayNameFor(model => model.Cargo)
+            </dt>
+            <dd class="col-sm-9">
+                @Html.DisplayFor(model => model.Cargo.NombreCargo)
+            </dd>
+            <dt class="col-sm-3">
+                @Html.DisplayNameFor(model => model.Ciudad)
+            </dt>
+            <dd class="col-sm-9">
+                @Html.DisplayFor(model => model.Ciudad.NombreCiudad)
+            </dd>
+            <dt class="col-sm-3">
+                @Html.DisplayNameFor(model => model.Compania)
+            </dt>
+            <dd class="col-sm-9">
+                @Html.DisplayFor(model => model.Compania.NombreCompania)
+            </dd>
+            <dt class="col-sm-3">
+                @Html.DisplayNameFor(model => model.Estatus)
+            </dt>
+            <dd class="col-sm-9">
+                @Html.DisplayFor(model => model.Estatus.NombreEstatus)
+            </dd>
+        </dl>
+    </div>
 </div>
-</div>
+<hr />
+
+<h3>Cuentas asignadas</h3>
+
+@if (Model.CuentasEmpleados.Any())
+{
+    <table class="table table-striped table-sm" style="font-size: 0.9em;">
+        <thead>
+            <tr>
+                <th>Aplicación</th>
+                <th>Usuario</th>
+                <th>Contraseña</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var cuenta in Model.CuentasEmpleados)
+            {
+                <tr>
+                    <td>@Html.DisplayFor(modelItem => cuenta.Aplicacion.NombreAplicacion)</td>
+                    <td>@Html.DisplayFor(modelItem => cuenta.Usuario)</td>
+                    <td>@Html.DisplayFor(modelItem => cuenta.Contrasena)</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    
+}
+else
+{
+    <p class="text-muted">Este empleado no tiene cuentas asignadas.</p>
+}
+
 
 <div class="modal-footer">
     <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cerrar</button>
