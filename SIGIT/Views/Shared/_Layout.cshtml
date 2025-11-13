@@ -4,14 +4,12 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - SIGIT</title>
-    <script type="importmap"></script>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/SIGIT.styles.css" asp-append-version="true" />
 </head>
 <body>
     <header>
-        @* <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3"> *@
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm bg-dark border-bottom box-shadow mb-3" data-bs-theme="dark">
             <div class="container-fluid">
                 <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">SIGIT</a>
@@ -20,48 +18,58 @@
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        @* <li class="nav-item">
-                            <a class="nav-link text-white" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li> *@
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle text-light" href="#" role="button" data-bs-toggle="dropdown">Empleados</a>
-                            <ul class="dropdown-menu">
-                                <li class="nav-item">
-                                    <a class="nav-link" asp-area="" asp-controller="Empleados" asp-action="Listado">Empleados</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" asp-area="" asp-controller="CuentasEmpleadoes" asp-action="index">Empleados - Cuentas</a>
-                                </li>
-                            </ul>
-                        </li>
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle text-light" href="#" role="button" data-bs-toggle="dropdown">Administración</a>
 
-                            <ul class="dropdown-menu">
-                                <li class="nav-item">
-                                    <a class="nav-link" asp-area="" asp-controller="Aplicaciones" asp-action="index">Aplicaciones</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" asp-area="" asp-controller="Areas" asp-action="index">Áreas</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" asp-area="" asp-controller="Cargoes" asp-action="index">Cargos</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" asp-area="" asp-controller="Ciudades" asp-action="index">Ciudades</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" asp-area="" asp-controller="Companias" asp-action="index">Compañías</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" asp-area="" asp-controller="Estatus" asp-action="index">Estatus</a>
-                                </li>
-                            </ul>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" asp-area="" asp-controller="UsuariosSistemas" asp-action="index">Usuarios</a>
-                        </li>
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        <ul class="navbar-nav flex-grow-1">
+                            @* <li class="nav-item">
+                                <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                            </li> *@
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Empleados</a>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" asp-area="" asp-controller="Empleados" asp-action="Listado">Empleados</a></li>
+                                    <li><a class="dropdown-item" asp-area="" asp-controller="CuentasEmpleadoes" asp-action="index">Empleados - Cuentas</a></li>
+                                </ul>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Parametros</a>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" asp-area="" asp-controller="Aplicaciones" asp-action="index">Aplicaciones</a></li>
+                                    <li><a class="dropdown-item" asp-area="" asp-controller="Areas" asp-action="index">Áreas</a></li>
+                                    <li><a class="dropdown-item" asp-area="" asp-controller="Cargoes" asp-action="index">Cargos</a></li>
+                                    <li><a class="dropdown-item" asp-area="" asp-controller="Ciudades" asp-action="index">Ciudades</a></li>
+                                    <li><a class="dropdown-item" asp-area="" asp-controller="Companias" asp-action="index">Compañías</a></li>
+                                    <li><a class="dropdown-item" asp-area="" asp-controller="Estatus" asp-action="index">Estatus</a></li>
+                                    <li><a class="dropdown-item" asp-area="" asp-controller="UsuariosSistemas" asp-action="index">Usuarios Sistema</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    }
+                    else
+                    {
+                        <ul class="navbar-nav flex-grow-1"></ul>
+                    }
+
+
+                    <ul class="navbar-nav">
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            <li class="nav-item dropdown">
+
+                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownUser" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    ¡Hola, @User.Claims.FirstOrDefault(c => c.Type == "FullName")?.Value!
+                                </a>
+
+                                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownUser">
+                                    <li>
+                                        <form asp-controller="Home" asp-action="Logout" method="post">
+                                            <button typeF="submit" class="dropdown-item">Cerrar Sesión</button>
+                                        </form>
+                                    </li>
+                                </ul>
+                            </li>
+                        }
                     </ul>
                 </div>
             </div>
@@ -75,15 +83,14 @@
 
     <footer class="border-top footer text-muted">
         <div class="container">
-            &copy; 2025 - SIGIT - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            &copy; 2025 - SIGIT - Grupo Consorcial Autofinanciera SA
         </div>
     </footer>
+
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
-    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
-    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
-    <!-- ======================= INICIA MODAL GENÉRICO ======================= -->
+
     <div class="modal fade" id="genericModal" tabindex="-1" aria-labelledby="genericModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
@@ -92,12 +99,15 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    Cargando...
+                    <div class="text-center">
+                        <div class="spinner-border" role="status">
+                            <span class="visually-hidden">Cargando...</span>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-    <!-- ======================== FIN MODAL GENÉRICO ======================== -->
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

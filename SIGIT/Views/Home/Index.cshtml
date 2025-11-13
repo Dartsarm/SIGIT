@@ -1,12 +1,42 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+﻿@model SIGIT.ViewModels.LoginViewModel
+
+@{
+    ViewData["Title"] = "Iniciar Sesión";
 }
 
 <div class="text-center">
     <h1 class="display-4">Bienvenido a SIGIT</h1>
     <h3>Un producto para el grupo consorcial Autofinanciera</h3>
-    <br />  
+    <hr />
+
+    <div class="row d-flex justify-content-center">
+        <div class="col-md-4">
+
+            <form id="account" method="post" asp-action="Index">
+
+                <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+
+                <div class="form-floating mb-3">
+                    <input asp-for="UsuarioLogin" class="form-control" placeholder="Usuario" />
+                    <label asp-for="UsuarioLogin"></label>
+                    <span asp-validation-for="UsuarioLogin" class="text-danger"></span>
+                </div>
+
+                <div class="form-floating mb-3">
+                    <input asp-for="Contrasena" class="form-control" placeholder="Contraseña" />
+                    <label asp-for="Contrasena"></label>
+                    <span asp-validation-for="Contrasena" class="text-danger"></span>
+                </div>
+
+                <div>
+                    <button id="login-submit" type="submit" class="w-100 btn btn-lg btn-primary">Ingresar</button>
+                </div>
+            </form>
+
+        </div>
+    </div>
+
+    <hr />
     <p>Todos los datos contenidos en esta aplicación son de uso netamente corporativos y se prohibe compartir la información contenida en ella.</p>
-    <p>Todos los derechos de uso e información son reservados.</p>
-@*     <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>*@
+    <p>Todos los derechos de uso e información son reservados por el grupo consorcial Autofinanciera S.A.</p>
 </div>

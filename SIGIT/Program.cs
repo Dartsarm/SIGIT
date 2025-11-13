@@ -1,7 +1,21 @@
 using Microsoft.EntityFrameworkCore;
 using SIGIT.Models;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// Configuración de la autenticación con cookies
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie(options =>
+    {
+        options.LoginPath = "/Home/Index"; // Página de login
+        options.LogoutPath = "/Home/Logout"; // Página de logout
+        options.ExpireTimeSpan = TimeSpan.FromMinutes(60); // Duración de la sesión
+        options.SlidingExpiration = true;
+    });
+
+builder.Services.AddControllersWithViews();
+
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
@@ -26,6 +40,7 @@ if (!app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseRouting();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapStaticAssets();
