@@ -6,9 +6,13 @@
 
 <h1>Usuarios y Cuentas</h1>
 
-<p>
-    <a class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#genericModal" data-url="@Url.Action("Create")" data-title="Generar cuentas">Crear Cuenta</a>
-</p>
+@if (User.IsInRole("Administrador") || User.IsInRole("Técnico"))
+{
+    <p>
+        <a class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#genericModal" data-url="@Url.Action("Create", "CuentasEmpleadoes")" data-title="Generar cuentas">Crear Cuenta</a>
+    </p>
+}
+
 <table class="table">
     <thead>
         <tr>
@@ -30,7 +34,6 @@
             <th></th>
         </tr>
     </thead>
-
     <tbody>
         @foreach (var item in Model)
         {
@@ -47,20 +50,32 @@
                 <td>
                     @if (!string.IsNullOrEmpty(item.Contrasena))
                     {
-                        <span>********@item.Contrasena.Substring(Math.Max(0, item.Contrasena.Length - 3))</span>
-                    }
-                    else
-                    {
-                        <span>(vacía)</span>
+                        <span>****@item.Contrasena.Substring(Math.Max(0, item.Contrasena.Length - 3))</span>
                     }
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.UltimaModificacion)
                 </td>
                 <td>
-                    <a class="btn btn-outline-warning" data-bs-toggle="modal" data-bs-target="#genericModal" data-url="@Url.Action("Edit", new { id = item.CuentaId })" data-title="Editar Cuentas">Editar</a> |
-                    <a class="btn btn-outline-info" data-bs-toggle="modal" data-bs-target="#genericModal" data-url="@Url.Action("Details", new { id = item.CuentaId })" data-title="Detalles cuentas">Detalles</a> |
-                    <a class="btn btn-outline-danger" asp-action="Delete" asp-route-id="@item.CuentaId">Eliminar</a>
+                    @if (User.IsInRole("Administrador") || User.IsInRole("Técnico"))
+                    {
+                        <a class="btn btn-outline-warning" data-bs-toggle="modal" data-bs-target="#genericModal" data-url="@Url.Action("Edit", "CuentasEmpleadoes", new { id = item.CuentaId })" data-title="Editar Cuentas">Editar</a>
+                        <span>|</span>
+                    }
+
+                    <a class="btn btn-outline-info" data-bs-toggle="modal" data-bs-target="#genericModal" data-url="@Url.Action("Details", "CuentasEmpleadoes", new { id = item.CuentaId })" data-title="Detalles cuentas">Detalles</a>
+
+                    @if (User.IsInRole("Administrador"))
+                    {
+                        <span>|</span>
+                        <a class="btn btn-outline-danger"
+                           data-bs-toggle="modal"
+                           data-bs-target="#genericModal"
+                           data-url="@Url.Action("Delete", "CuentasEmpleadoes", new { id = item.CuentaId })"
+                           data-title="Eliminar Cuenta">
+                            Eliminar
+                        </a>
+                    }
                 </td>
             </tr>
         }
@@ -72,7 +87,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="genericModalLabel">Cargando...</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <button type.button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <div class="text-center">
@@ -93,13 +108,11 @@
 
     <script>
         $(function () {
-
-            // 1. Cargar contenido en el modal al ABRIR
+            // 1. Cargar contenido
             $('#genericModal').on('show.bs.modal', function (event) {
                 var button = $(event.relatedTarget);
                 var url = button.data('url');
                 var title = button.data('title');
-
                 var modal = $(this);
                 modal.find('.modal-title').text(title || 'Cargando...');
                 modal.find('.modal-body').html('<div class="text-center"><div class="spinner-border" role="status"><span class="visually-hidden">Cargando...</span></div></div>');
@@ -107,23 +120,20 @@
                 if (url) {
                     $.get(url).done(function (data) {
                         modal.find('.modal-body').html(data);
-
                         var newForm = modal.find('form');
                         $.validator.unobtrusive.parse(newForm);
+                    }).fail(function () {
+                        // AÑADIDO: Si la URL falla (ej. 404), muestra un error
+                        modal.find('.modal-body').html('<p class="text-danger">Error al cargar el contenido.</p>');
                     });
                 }
             });
 
-            // 2. Enviar el formulario del modal al hacer SUBMIT
+            // 2. Enviar formulario
             $('#genericModal').on('submit', 'form', function (e) {
                 e.preventDefault();
-
                 var form = $(this);
-
-                if (!form.valid()) {
-                    return;
-                }
-
+                if (!form.valid()) { return; }
                 var url = form.attr('action');
                 var formData = form.serialize();
 
@@ -137,11 +147,11 @@
                         $.validator.unobtrusive.parse($('#genericModal').find('form'));
                     }
                 }).fail(function (xhr, status, error) {
-                    alert('Error fatal al procesar la solicitud: ' + error);
+                    alert('Error fatal: ' + error);
                 });
             });
 
-            // 3. Limpiar el modal al CERRAR
+            // 3. Limpiar al cerrar
             $('#genericModal').on('hidden.bs.modal', function () {
                 var modal = $(this);
                 modal.find('.modal-body').html('<div class="text-center"><div class="spinner-border" role="status"><span class="visually-hidden">Cargando...</span></div></div>');

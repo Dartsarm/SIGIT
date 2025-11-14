@@ -12,6 +12,7 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
         options.LogoutPath = "/Home/Logout"; // Página de logout
         options.ExpireTimeSpan = TimeSpan.FromMinutes(60); // Duración de la sesión
         options.SlidingExpiration = true;
+        options.AccessDeniedPath = "/Home/AccessDenied";
     });
 
 builder.Services.AddControllersWithViews();

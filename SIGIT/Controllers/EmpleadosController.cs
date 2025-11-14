@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -10,6 +11,7 @@ using SIGIT.ViewModels;
 
 namespace SIGIT.Controllers
 {
+    [Authorize]
     public class EmpleadosController : Controller
     {
         private readonly SigitContext _context;
@@ -79,6 +81,7 @@ namespace SIGIT.Controllers
         }
 
         // GET: Empleados/Create
+        [Authorize(Roles = "Administrador, Técnico")]
         public async Task<IActionResult> Create()
         {
             // Llama al método para llenar los dropdowns vacíos
@@ -90,6 +93,7 @@ namespace SIGIT.Controllers
         // POST: Empleados/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Administrador, Técnico")]
         public async Task<IActionResult> Create([Bind("EmpleadoId,Cedula,Nombre,SegundoNombre,Apellido,SegundoApellido,Celular,CorreoPersonal,CargoId,AreaId,CiudadId,CompaniaId,EstatusId,FechaIngreso,FechaRetiro")] Empleado empleado)
         {
             // 1. Asigna la fecha de registro del sistema
@@ -119,6 +123,7 @@ namespace SIGIT.Controllers
         }
 
         // GET: Empleados/Edit/5
+        [Authorize(Roles = "Administrador, Técnico")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -141,6 +146,7 @@ namespace SIGIT.Controllers
         // POST: Empleados/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Administrador, Técnico")]
         public async Task<IActionResult> Edit(int id, [Bind("EmpleadoId,Cedula,Nombre,SegundoNombre,Apellido,SegundoApellido,Celular,CorreoPersonal,CargoId,AreaId,CiudadId,CompaniaId,EstatusId,FechaIngreso,FechaRetiro")] Empleado empleado)
         {
             if (id != empleado.EmpleadoId)
@@ -190,6 +196,7 @@ namespace SIGIT.Controllers
         }
 
         // GET: Empleados/Delete/5
+        [Authorize(Roles = "Administrador")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -210,12 +217,13 @@ namespace SIGIT.Controllers
                 return NotFound();
             }
 
-            return View(empleado);
+            return PartialView(empleado);
         }
 
         // POST: Empleados/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Administrador")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var empleado = await _context.Empleados.FindAsync(id);

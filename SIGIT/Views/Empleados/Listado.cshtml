@@ -6,9 +6,13 @@
 
 <h1>Listado</h1>
 
+@if (User.IsInRole("Administrador") || User.IsInRole ("Técnico")){
+
 <p>
     <a class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#genericModal" data-url="@Url.Action("Create", "Empleados")" data-title="Nuevo Usuario">Nuevo usuario</a>
+
 </p>
+}
 <table class="table">
     <thead>
         <tr>
@@ -61,7 +65,12 @@
 
                     <a class="btn btn-outline-info" data-bs-toggle="modal" data-bs-target="#genericModal" data-url="@Url.Action("Details", "Empleados", new { id = item.Id })" data-title="Detalles del empleado">Detalles</a>
 
-                    <a class="btn btn-outline-danger" asp-action="Delete" asp-route-id="@item.Id">Eliminar</a>
+                    @if (User.IsInRole("Administrador"))
+                    {
+                        <span>|</span>
+                        <a class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#genericModal" data-url="@Url.Action("Delete", "Empleados", new { id = item.Id })" data-title="Eliminar Empleado">Eliminar</a>
+                    }
+                    @* <a class="btn btn-outline-danger" asp-action="Delete" asp-route-id="@item.Id">Eliminar</a> *@
                 </td>
             </tr>
         }

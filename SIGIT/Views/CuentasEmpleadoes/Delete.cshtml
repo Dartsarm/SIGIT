@@ -1,37 +1,43 @@
 ﻿@model SIGIT.Models.CuentasEmpleado
 
 @{
-    ViewData["Title"] = "Eliminar Cuenta";
+    Layout = null; // <-- CORRECCIÓN 1: Para que cargue en el modal
 }
 
-<h3 class="text-danger">¿Esta seguro que quiere eliminar esta Cuenta?</h3>
-<div>
-    <h4>Cuenta de Empleado</h4>
-    <hr />
-    <dl class="row">
-        <dt class="col-sm-3">
-            @Html.DisplayNameFor(model => model.Empleado)
-        </dt>
-        <dd class="col-sm-9">
-            @Html.DisplayFor(model => model.Empleado.Nombre) @Html.DisplayFor(model => model.Empleado.Apellido)
-        </dd>
-        <dt class="col-sm-3">
-            @Html.DisplayNameFor(model => model.Aplicacion)
-        </dt>
-        <dd class="col-sm-9">
-            @Html.DisplayFor(model => model.Aplicacion.NombreAplicacion)
-        </dd>
-        <dt class="col-sm-3">
-            @Html.DisplayNameFor(model => model.Usuario)
-        </dt>
-        <dd class="col-sm-9">
-            @Html.DisplayFor(model => model.Usuario)
-        </dd>
-    </dl>
+<div class="modal-body">
+    <h3 class="text-danger">¿Esta seguro que quiere eliminar esta Cuenta?</h3>
+    <div>
+        <h4>Detalles de la Cuenta</h4>
+        <hr />
+        <dl class="row">
+            <dt class="col-sm-3">
+                @Html.DisplayNameFor(model => model.Empleado)
+            </dt>
+            <dd class="col-sm-9">
+                @Html.DisplayFor(model => model.Empleado.Nombre) @Html.DisplayFor(model => model.Empleado.Apellido)
+            </dd>
+            <dt class="col-sm-3">
+                @Html.DisplayNameFor(model => model.Aplicacion)
+            </dt>
+            <dd class="col-sm-9">
+                @Html.DisplayFor(model => model.Aplicacion.NombreAplicacion)
+            </dd>
+            <dt class="col-sm-3">
+                @Html.DisplayNameFor(model => model.Usuario)
+            </dt>
+            <dd class="col-sm-9">
+                @Html.DisplayFor(model => model.Usuario)
+            </dd>
+        </dl>
 
-    <form asp-action="Delete">
-        <input type="hidden" asp-for="CuentaId" />
-        <input type="submit" value="Eliminar" class="btn btn-outline-danger" /> |
-        <a class="btn btn-outline-secondary" asp-action="Index">Volver</a>
-    </form>
+        <form asp-action="Delete">
+            <input type="hidden" asp-for="CuentaId" />
+
+        </form>
+    </div>
+</div>
+
+<div class="modal-footer">
+    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+    <input type="submit" value="Eliminar" class="btn btn-danger" onclick="$('#genericModal form').submit();" />
 </div>
