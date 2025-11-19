@@ -33,7 +33,7 @@
             <th>
                 @Html.DisplayNameFor(model => model.Activo)
             </th>
-            <th></th>
+            <th>Acciones</th>
         </tr>
     </thead>
     <tbody>
@@ -65,9 +65,9 @@
                     @Html.DisplayFor(modelItem => item.Activo)
                 </td>
                 <td>
-                    <a class="btn btn-outline-warning" data-bs-toggle="modal" data-bs-target="#genericModal" data-url="@Url.Action("Edit", new { id = item.UsuarioSistemaId })" data-title="Editar Usuario">Editar</a>
-                    <a class="btn btn-outline-info" data-bs-toggle="modal" data-bs-target="#genericModal" data-url="@Url.Action("Details", new { id = item.UsuarioSistemaId })" data-title="Detalles Usuario">Detalles</a>
-                    <a class="btn btn-outline-danger" asp-action="Delete" asp-route-id="@item.UsuarioSistemaId">Eliminar</a>
+                    <a class="btn btn-outline-warning" data-bs-toggle="modal" data-bs-target="#genericModal" data-url="@Url.Action("Edit", new { id = item.UsuarioSistemaId })" data-title="Editar Usuario"><i class="bi bi-pencil-square"></i></a>
+                    <a class="btn btn-outline-info" data-bs-toggle="modal" data-bs-target="#genericModal" data-url="@Url.Action("Details", new { id = item.UsuarioSistemaId })" data-title="Detalles Usuario"><i class="bi bi-ui-checks"></i></a>
+                    <a class="btn btn-outline-danger" asp-action="Delete" asp-route-id="@item.UsuarioSistemaId"><i class="bi bi-x-square-fill"></i></a>
                 </td>
             </tr>
         }

@@ -5,38 +5,183 @@
 }
 
 <div class="text-center">
-    <h1 class="display-4">Bienvenido a SIGIT</h1>
+    <h1 class="display-4"><strong>Bienvenido a SIGIT</strong></h1>
     <h3>Un producto para el grupo consorcial Autofinanciera</h3>
     <hr />
+    <div class="row">
+        <div class="col-md-6 mx-auto">
+            <div class="card">
+                <div class="card-body">
+                    <div class="row d-flex justify-content-center">
+                        <div class="col-md-8">
 
-    <div class="row d-flex justify-content-center">
-        <div class="col-md-4">
+                            <form id="account" method="post" asp-action="Index">
 
-            <form id="account" method="post" asp-action="Index">
+                                <!-- Token Anti-Falsificación del formulario de Login -->
+                                @Html.AntiForgeryToken()
 
-                <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+                                <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
 
-                <div class="form-floating mb-3">
-                    <input asp-for="UsuarioLogin" class="form-control" placeholder="Usuario" />
-                    <label asp-for="UsuarioLogin"></label>
-                    <span asp-validation-for="UsuarioLogin" class="text-danger"></span>
+                                <div class="form-floating mb-3">
+                                    <input asp-for="UsuarioLogin" class="form-control" placeholder="Usuario" />
+                                    <label asp-for="UsuarioLogin"></label>
+                                    <span asp-validation-for="UsuarioLogin" class="text-danger"></span>
+                                </div>
+
+                                <div class="form-floating mb-3">
+                                    <input asp-for="Contrasena" class="form-control" placeholder="Contraseña" />
+                                    <label asp-for="Contrasena"></label>
+                                    <span asp-validation-for="Contrasena" class="text-danger"></span>
+                                </div>
+
+                                <div>
+                                    <button id="login-submit" type="submit" class="w-100 btn btn-lg btn-primary">Ingresar</button>
+                                </div>
+                            </form>
+
+                        </div>
+                    </div>
                 </div>
-
-                <div class="form-floating mb-3">
-                    <input asp-for="Contrasena" class="form-control" placeholder="Contraseña" />
-                    <label asp-for="Contrasena"></label>
-                    <span asp-validation-for="Contrasena" class="text-danger"></span>
-                </div>
-
-                <div>
-                    <button id="login-submit" type="submit" class="w-100 btn btn-lg btn-primary">Ingresar</button>
-                </div>
-            </form>
-
+            </div>
         </div>
     </div>
 
     <hr />
     <p>Todos los datos contenidos en esta aplicación son de uso netamente corporativos y se prohibe compartir la información contenida en ella.</p>
     <p>Todos los derechos de uso e información son reservados por el grupo consorcial Autofinanciera S.A.</p>
+
+    <div class="row">
+        <div class="col-md-6 mx-auto">
+            <div class="accordion" id="accordionUsuarios">
+                <div class="accordion-item">
+                    <h2 class="accordion-header ">
+                        <button class="accordion-button collapsed bg-info d-flex justify-content-center text-center w-100" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+                            <span class="w-100">
+                                Eres de los nuestros pero... ¿no recuerdas tus usuarios y contraseñas? <i class="bi bi-person-vcard"></i>
+                            </span>
+                        </button>
+
+                    </h2>
+                    <div id="collapseOne" class="accordion-collapse collapse" data-bs-parent="#accordionUsuarios">
+                        <div class="accordion-body">
+                            <p><i class="bi bi-arrow-down-right-circle"></i> Haz clic aquí y recupera tus datos de las aplicaciones <i class="bi bi-arrow-down-left-circle"></i></p>
+                            <div class="d-grid gap-2 col-6 mx-auto">
+                                
+                                <button id="btnRecoverAccounts" class="btn btn-primary" type="button" data-bs-toggle="modal" data-bs-target="#recoverAccountsModal">
+                                    <i class="bi bi-person-fill-lock"></i> Recuperar mis cuentas
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
 </div>
+
+
+<!-- MODAL DE RECUPERACIÓN -->
+
+<div class="modal fade" id="recoverAccountsModal" tabindex="-1" aria-labelledby="recoverAccountsModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title" id="recoverAccountsModalLabel">Recuperación de Credenciales</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <div class="modal-body">
+                <!-- Token Anti-Falsificación (super importante no borrar) -->
+                @Html.AntiForgeryToken()
+
+                <p>Por favor, ingresa tu número de cédula para que podamos enviarte tus credenciales de acceso a tu correo personal registrado.</p>
+                <div id="recoveryMessage" class="alert d-none" role="alert"></div>
+
+                <div class="form-floating mb-3">
+                    <input type="number" class="form-control" id="cedulaInput" placeholder="Número de Cédula" required>
+                    <label for="cedulaInput">Número de Cédula</label>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" id="sendCredentialsButton" class="btn btn-success">
+                    <i class="bi bi-envelope-check-fill"></i> Enviar mis credenciales
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- SCRIPT DE RECUPERACIÓN            -->
+
+@section Scripts {
+    <script>
+        // Usamos document.ready para asegurar que todos los elementos existan
+        $(document).ready(function() {
+
+            // Manejador del botón "Enviar mis credenciales" dentro del modal
+            $("#sendCredentialsButton").on("click", function() {
+                var button = $(this);
+                var cedula = $("#cedulaInput").val().trim();
+                var messageBox = $("#recoveryMessage");
+
+                // Leemos el token de seguridad
+                var token = $('input[name="__RequestVerificationToken"]').val();
+
+                // Validación simple
+                if (cedula === "" || cedula.length < 5) {
+                    messageBox.removeClass().addClass('alert alert-danger').text("Por favor, ingresa un número de cédula válido.").removeClass('d-none');
+                    return;
+                }
+
+                // Deshabilitar botón y mostrar cargando
+                button.prop("disabled", true).html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Enviando...');
+                messageBox.addClass('d-none'); // Ocultar mensajes anteriores
+
+                // Llamada AJAX al servidor
+                $.ajax({
+                    url: '@Url.Action("RecuperarCredenciales", "Empleados")',
+                    type: 'POST',
+                    data: { cedula: cedula },
+                    headers: {
+                        // Enviamos el token para pasar la validación [ValidateAntiForgeryToken]
+                        'RequestVerificationToken': token
+                    },
+                    success: function(response) {
+                        if (response.success) {
+                            messageBox.removeClass().addClass('alert alert-success').text(response.message).removeClass('d-none');
+                            // Opcional: Cerrar el modal después de un tiempo
+                            setTimeout(function() {
+                                 $('#recoverAccountsModal').modal('hide');
+                            }, 3000);
+                        } else {
+                            // Mostrar error del servidor (ej: cédula no encontrada, aunque devolvemos mensaje vago)
+                            messageBox.removeClass().addClass('alert alert-warning').text(response.message).removeClass('d-none');
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        // Manejar errores de red o errores 500
+                        var errorMsg = "Ocurrió un error inesperado al contactar al servidor. Inténtalo de nuevo más tarde.";
+                        if (xhr.status === 400) {
+                            errorMsg = "Error de seguridad (400). Por favor, refresca la página e inténtalo de nuevo.";
+                        } else if (xhr.status > 0) {
+                             errorMsg = "Error " + xhr.status + ": " + xhr.statusText;
+                        }
+                        messageBox.removeClass().addClass('alert alert-danger').text(errorMsg).removeClass('d-none');
+                    },
+                    complete: function() {
+                        // Restaurar el botón
+                        button.prop("disabled", false).html('<i class="bi bi-envelope-check-fill"></i> Enviar mis credenciales');
+                    }
+                });
+            });
+
+            // Limpia el modal cuando se cierra para evitar que se muestre el mensaje anterior
+            $('#recoverAccountsModal').on('hidden.bs.modal', function () {
+                $("#cedulaInput").val('');
+                $("#recoveryMessage").addClass('d-none').removeClass('alert-success alert-warning alert-danger').text('');
+            });
+        });
+    </script>
+}
