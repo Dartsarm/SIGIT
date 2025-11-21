@@ -1,34 +1,25 @@
 ﻿@model SIGIT.Models.Aplicacione
 
 @{
-    ViewData["Title"] = "Crear Aplicaciones";
+    Layout = null; // Necesario para vista parcial
 }
 
-<h1>Crear Aplicaciones</h1>
-
-<hr />
 <div class="row">
-    <div class="col-md-4">
+    <div class="col-md-12">
         <form asp-action="Create">
+            @Html.AntiForgeryToken()
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="NombreAplicacion" class="control-label"></label>
-                <input asp-for="NombreAplicacion" class="form-control" />
+                <input asp-for="NombreAplicacion" class="form-control" required />
                 <span asp-validation-for="NombreAplicacion" class="text-danger"></span>
             </div>
             <br />
             <div class="form-group">
-                <input type="submit" value="Guardar" class="btn btn-primary" />
+                <button type="submit" class="btn btn-outline-success"><i class="bi bi-floppy-fill"></i></button>
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal"><i class="bi bi-house-x-fill"></i></button>
             </div>
         </form>
     </div>
 </div>
-<hr />
-<div>
-    <a class="btn btn-outline-secondary" asp-action="Index">Volver</a>
-</div>
-
-@section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-}
 

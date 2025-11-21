@@ -9,11 +9,11 @@
 @if (User.IsInRole("Administrador") || User.IsInRole("Técnico"))
 {
     <p>
-        <a class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#genericModal" data-url="@Url.Action("Create", "CuentasEmpleadoes")" data-title="Generar cuentas">Crear Cuenta</a>
+        <a class="btn btn-outline-success btn-lg" data-bs-toggle="modal" data-bs-target="#genericModal" data-url="@Url.Action("Create", "CuentasEmpleadoes")" data-title="Generar cuentas"><i class="bi bi-person-fill-add"></i></a>
     </p>
 }
 
-<table class="table">
+<table class="table table-striped table-hover">
     <thead>
         <tr>
             <th>
@@ -59,22 +59,16 @@
                 <td>
                     @if (User.IsInRole("Administrador") || User.IsInRole("Técnico"))
                     {
-                        <a class="btn btn-outline-warning" data-bs-toggle="modal" data-bs-target="#genericModal" data-url="@Url.Action("Edit", "CuentasEmpleadoes", new { id = item.CuentaId })" data-title="Editar Cuentas">Editar</a>
-                        <span>|</span>
+                        <a class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#genericModal" data-url="@Url.Action("Edit", "CuentasEmpleadoes", new { id = item.CuentaId })" data-title="Editar Cuentas"><i class="bi bi-pencil-square"></i></a>
+                        
                     }
 
-                    <a class="btn btn-outline-info" data-bs-toggle="modal" data-bs-target="#genericModal" data-url="@Url.Action("Details", "CuentasEmpleadoes", new { id = item.CuentaId })" data-title="Detalles cuentas">Detalles</a>
+                    <a class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#genericModal" data-url="@Url.Action("Details", "CuentasEmpleadoes", new { id = item.CuentaId })" data-title="Detalles cuentas"><i class="bi bi-ui-checks"></i></a>
 
                     @if (User.IsInRole("Administrador"))
                     {
-                        <span>|</span>
-                        <a class="btn btn-outline-danger"
-                           data-bs-toggle="modal"
-                           data-bs-target="#genericModal"
-                           data-url="@Url.Action("Delete", "CuentasEmpleadoes", new { id = item.CuentaId })"
-                           data-title="Eliminar Cuenta">
-                            Eliminar
-                        </a>
+
+                        <a class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#genericModal" data-url="@Url.Action("Delete", "CuentasEmpleadoes", new { id = item.CuentaId })" data-title="Eliminar Cuenta"><i class="bi bi-x-square-fill"></i></a>
                     }
                 </td>
             </tr>

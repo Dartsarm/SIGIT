@@ -6,10 +6,14 @@
 
 <h1>Aplicaciones</h1>
 
-<p>
-    <a class="btn btn-outline-success" asp-action="Create">Crear Nuevo</a>
-</p>
-<table class="table">
+@if (User.IsInRole("Administrador"))
+{
+    <p>
+        <a class="btn btn-outline-success btn-lg" data-bs-toggle="modal" data-bs-target="#genericModal" data-url="@Url.Action("Create", "Aplicaciones")" data-title="Nueva Aplicación">
+            <i class="bi bi-building-add"></i></a>
+    </p>
+}
+<table class="table table-striped table-hover">
     <thead>
         <tr>
             <th>
@@ -19,17 +23,96 @@
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.NombreAplicacion)
-            </td>
-            <td>
-                <a class="btn btn-outline-warning" asp-action="Edit" asp-route-id="@item.AplicacionId">Editar</a> |
-                <a class="btn btn-outline-info" asp-action="Details" asp-route-id="@item.AplicacionId">Detalles</a> |
-                <a class="btn btn-outline-danger" asp-action="Delete" asp-route-id="@item.AplicacionId">Eliminar</a>
-            </td>
-        </tr>
-}
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.NombreAplicacion)
+                </td>
+                <td>
+                    <a class="btn btn-outline-primary btn-sm" data-bs-toggle="modal" data-bs-target="#genericModal" data-url="@Url.Action("Details", "Aplicaciones", new { id = item.AplicacionId })" data-title="Detalles Aplicación">
+                        <i class="bi bi-ui-checks"></i></a>
+
+                    @if (User.IsInRole("Administrador") || User.IsInRole("Técnico"))
+                    {
+                        <a class="btn btn-outline-primary btn-sm" data-bs-toggle="modal" data-bs-target="#genericModal" data-url="@Url.Action("Edit", "Aplicaciones", new { id = item.AplicacionId })" data-title="Editar Aplicación">
+                            <i class="bi bi-pencil-square"></i></a>
+                    }
+
+                    @if (User.IsInRole("Administrador"))
+                    {
+                        <a class="btn btn-outline-danger btn-sm" data-bs-toggle="modal" data-bs-target="#genericModal" data-url="@Url.Action("Delete", "Aplicaciones", new { id = item.AplicacionId })" data-title="Eliminar Aplicación">
+                            <i class="bi bi-trash"></i></a>
+                    }
+                </td>
+            </tr>
+        }
     </tbody>
 </table>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+
+    <script>
+        $(function () {
+            // Carga contenido en el modal al ABRIR
+            $('#genericModal').on('show.bs.modal', function (event) {
+                var button = $(event.relatedTarget);
+                var url = button.data('url');
+                var title = button.data('title');
+
+                var modal = $(this);
+                modal.find('.modal-title').text(title || 'Cargando...');
+                modal.find('.modal-body').html('<div class="text-center"><div class="spinner-border" role="status"><span class="visually-hidden">Cargando...</span></div></div>');
+
+                if (url) {
+                    $.get(url).done(function (data) {
+                        modal.find('.modal-body').html(data);
+                        var newForm = modal.find('form');
+                        $.validator.unobtrusive.parse(newForm);
+                    });
+                }
+            });
+
+            // Enviar el formulario del modal al hacer SUBMIT
+            $('#genericModal').on('submit', 'form', function (e) {
+                e.preventDefault();
+
+                var form = $(this);
+
+                if (!form.valid()) {
+                    return;
+                }
+
+                var url = form.attr('action');
+                var formData = form.serialize();
+
+                $.post(url, formData).done(function (response) {
+                    // Si tiene éxito (JSON devuelto por el controlador)
+                    if (typeof response === 'object' && response.success === true) {
+                       $('#genericModal').modal('hide');
+                       location.reload();
+                    }
+                    // Si falla (PartialView devuelta por el controlador)
+                    else {
+                        $('#genericModal').find('.modal-body').html(response);
+                        $.validator.unobtrusive.parse($('#genericModal').find('form'));
+
+                    }
+                }).fail(function (xhr, status, error) {
+                    alert('Error fatal al procesar la solicitud: ' + error);
+                });
+            });
+
+            // Limpiar el modal al CERRAR
+            $('#genericModal').on('hidden.bs.modal', function () {
+                var modal = $(this);
+                modal.find('.modal-body').html('<div class="text-center"><div class="spinner-border" role="status"><span class="visually-hidden">Cargando...</span></div></div>');
+                modal.find('.modal-title').text('Cargando...');
+            });
+        });
+    </script>
+}

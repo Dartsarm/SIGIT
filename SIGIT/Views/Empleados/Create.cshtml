@@ -113,11 +113,15 @@
                         </select>
                         <span asp-validation-for="EstatusId" class="text-danger"></span>
                     </div>
-                    <div class="col-6"></div>
+                    <div class="col-6">
+                        <label asp-for="FechaIngreso" class="control-label"></label>
+                        <input asp-for="FechaIngreso" type="date" class="form-control" required />
+                        <span asp-validation-for="FechaIngreso" class="text-danger"></span>
+                    </div>
                 </div>
             </div>
 
-            <div class="container text-start">
+            @* <div class="container text-start">
                 <div class="row">
                     <div class="col">
                         <label asp-for="FechaIngreso" class="control-label"></label>
@@ -130,12 +134,12 @@
                         <span asp-validation-for="FechaRetiro" class="text-danger"></span>
                     </div>
                 </div>
-            </div>
+            </div> *@
 
             <br />
             <div class="form-group">
-                <button type="submit" class="btn btn-outline-success">Guardar</button>
-                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="submit" class="btn btn-outline-success btn-lg"><i class="bi bi-database-fill-check"></i></button>
+                <button type="button" class="btn btn-outline-secondary btn-lg" data-bs-dismiss="modal"><i class="bi bi-arrow-left-square-fill"></i></button>
             </div>
         </form>
     </div>

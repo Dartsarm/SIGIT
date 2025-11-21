@@ -7,9 +7,10 @@
 <h1>Áreas</h1>
 
 <p>
-    <a class="btn btn-outline-success" asp-action="Create" data-bs-toggle="modal" data-bs-target="#genericModal" data-url="@Url.Action("Create")" data-title="nueva area">Crear nuevo</a>
+    <a class="btn btn-outline-success btn-lg" asp-action="Create" data-bs-toggle="modal" data-bs-target="#genericModal" data-url="@Url.Action("Create")" data-title="nueva area">
+        <i class="bi bi-briefcase"></i></a>
 </p>
-<table class="table">
+<table class="table table-striped table-hover">
     <thead>
         <tr>
             <th>
@@ -26,9 +27,9 @@
                     @Html.DisplayFor(modelItem => item.NombreArea)
                 </td>
                 <td>
-                    <a class="btn btn-outline-warning" data-bs-toggle="modal" data-bs-target="#genericModal" data-url="@Url.Action("Edit", new { id = item.AreaId })" data-title="Editar Área">Editar</a> |
-                    <a class="btn btn-outline-info" data-bs-toggle="modal" data-bs-target="#genericModal" data-url="@Url.Action("Details", new { id = item.AreaId })" data-title="Detalles Área">Detalles</a> |
-                    <a class="btn btn-outline-danger" asp-action="Delete" asp-route-id="@item.AreaId">Eliminar</a>
+                    <a class="btn btn-outline-primary btn-sm" data-bs-toggle="modal" data-bs-target="#genericModal" data-url="@Url.Action("Details", new { id = item.AreaId })" data-title="Detalles Área"><i class="bi bi-ui-checks"></i></a>
+                    <a class="btn btn-outline-primary btn-sm" data-bs-toggle="modal" data-bs-target="#genericModal" data-url="@Url.Action("Edit", new { id = item.AreaId })" data-title="Editar Área"><i class="bi bi-pencil-square"></i></a>
+                    <a class="btn btn-outline-danger btn-sm" data-bs-toggle="modal" data-bs-target="#genericModal" data-url="@Url.Action("Delete", new { id = item.AreaId })" data-title="Eliminar área"><i class="bi bi-trash"></i></a>
                 </td>
             </tr>
         }

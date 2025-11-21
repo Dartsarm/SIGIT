@@ -54,45 +54,73 @@
     @Html.AntiForgeryToken()
 
     <div>
-        <dl class="row">
-            <dt class="col-sm-3">@Html.DisplayNameFor(model => model.Cedula)</dt>
-            <dd class="col-sm-9">@Html.DisplayFor(model => model.Cedula)</dd>
+        <div class="row g-3">
+            <dl class="row">
+                <div class="col-md-12">
+                    <div class="row">
+                        <dt class="col-sm-3">@Html.DisplayNameFor(model => model.Cedula)</dt>
+                        <dd class="col-sm-9 d-inline-flex p-2">@Html.DisplayFor(model => model.Cedula)</dd>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <div class="row">
+                        <dt class="col-sm-3">Nombre Completo</dt>
+                        <dd class="col-sm-9 d-inline-flex p-2">
+                            @string.Join(" ", new[] { Model.Nombre, Model.SegundoNombre, Model.Apellido, Model.SegundoApellido }.Where(s => !string.IsNullOrWhiteSpace(s)))
+                        </dd>
+                    </div>
+                </div>
+                <hr />
+                <div class="col-md-4">
+                    <dt class="col-sm-4">@Html.DisplayNameFor(model => model.Celular)</dt>
+                    <dd class="col-sm-12 border rounded-2 d-inline-flex p-2">@Html.DisplayFor(model => model.Celular)</dd>
+                </div>
+                <div class="col-md-8">
+                    <dt class="col-sm-4">@Html.DisplayNameFor(model => model.CorreoPersonal)</dt>
+                    <dd class="col-sm-12 border rounded-2 d-inline-flex p-2">@Html.DisplayFor(model => model.CorreoPersonal)</dd>
+                </div>
+                <hr />
+                <div class="col-md-4">
+                    <dt class="col-sm-3">@Html.DisplayNameFor(model => model.Area)</dt>
+                    <dd class="col-sm-12 border rounded-2 d-inline-flex p-2">@Html.DisplayFor(model => model.Area.NombreArea)</dd>
+                </div>
+                <div class="col-md-4">
+                    <dt class="col-sm-3">@Html.DisplayNameFor(model => model.Cargo)</dt>
+                    <dd class="col-sm-12 border rounded-2 d-inline-flex p-2">@Html.DisplayFor(model => model.Cargo.NombreCargo)</dd>
+                </div>
+                <div class="col-md-4">
+                    <dt class="col-sm-2">@Html.DisplayNameFor(model => model.Ciudad)</dt>
+                    <dd class="col-sm-12 border rounded-2 d-inline-flex p-2">@Html.DisplayFor(model => model.Ciudad.NombreCiudad)</dd>
+                </div>
 
-            <dt class="col-sm-3">Nombre Completo</dt>
-            <dd class="col-sm-9">
-                @string.Join(" ", new[] { Model.Nombre, Model.SegundoNombre, Model.Apellido, Model.SegundoApellido }.Where(s => !string.IsNullOrWhiteSpace(s)))
-            </dd>
+                <div class="col-md-12">
+                    <div class="row">
+                        <dt class="col-sm-2">@Html.DisplayNameFor(model => model.Compania)</dt>
+                        <dd class="col-sm-8 border rounded-2 d-inline-flex p-2">@Html.DisplayFor(model => model.Compania.NombreCompania)</dd>
+                    </div>
+                </div>
+                <hr />
+                <div class="col-md-4">
+                    <dt class="col-sm-8">@Html.DisplayNameFor(model => model.FechaIngreso)</dt>
+                    <dd class="col-sm-12 border rounded-2 d-inline-flex p-2">@Html.DisplayFor(model => model.FechaIngreso)</dd>
+                </div>
+                <div class="col-md-4">
+                    <dt class="col-sm-8">@Html.DisplayNameFor(model => model.FechaRetiro)</dt>
+                    <dd class="col-sm-12 border rounded-2 d-inline-flex p-2">@Html.DisplayFor(model => model.FechaRetiro)</dd>
+                </div>
+                <div class="col-md-4">
+                    <dt class="col-sm-8">@Html.DisplayNameFor(model => model.FechaRegistro)</dt>
+                    <dd class="col-sm-12 border rounded-2 d-inline-flex p-2">@Html.DisplayFor(model => model.FechaRegistro)</dd>
+                </div>
 
-            <dt class="col-sm-3">@Html.DisplayNameFor(model => model.Celular)</dt>
-            <dd class="col-sm-9">@Html.DisplayFor(model => model.Celular)</dd>
-
-            <dt class="col-sm-3">@Html.DisplayNameFor(model => model.CorreoPersonal)</dt>
-            <dd class="col-sm-9">@Html.DisplayFor(model => model.CorreoPersonal)</dd>
-
-            <dt class="col-sm-3">@Html.DisplayNameFor(model => model.FechaIngreso)</dt>
-            <dd class="col-sm-9">@Html.DisplayFor(model => model.FechaIngreso)</dd>
-
-            <dt class="col-sm-3">@Html.DisplayNameFor(model => model.FechaRetiro)</dt>
-            <dd class="col-sm-9">@Html.DisplayFor(model => model.FechaRetiro)</dd>
-
-            <dt class="col-sm-3">@Html.DisplayNameFor(model => model.FechaRegistro)</dt>
-            <dd class="col-sm-9">@Html.DisplayFor(model => model.FechaRegistro)</dd>
-
-            <dt class="col-sm-3">@Html.DisplayNameFor(model => model.Area)</dt>
-            <dd class="col-sm-9">@Html.DisplayFor(model => model.Area.NombreArea)</dd>
-
-            <dt class="col-sm-3">@Html.DisplayNameFor(model => model.Cargo)</dt>
-            <dd class="col-sm-9">@Html.DisplayFor(model => model.Cargo.NombreCargo)</dd>
-
-            <dt class="col-sm-3">@Html.DisplayNameFor(model => model.Ciudad)</dt>
-            <dd class="col-sm-9">@Html.DisplayFor(model => model.Ciudad.NombreCiudad)</dd>
-
-            <dt class="col-sm-3">@Html.DisplayNameFor(model => model.Compania)</dt>
-            <dd class="col-sm-9">@Html.DisplayFor(model => model.Compania.NombreCompania)</dd>
-
-            <dt class="col-sm-3">@Html.DisplayNameFor(model => model.Estatus)</dt>
-            <dd class="col-sm-9">@Html.DisplayFor(model => model.Estatus.NombreEstatus)</dd>
-        </dl>
+                <div class="row col-md-12">
+                    
+                        <dt class="col-sm-2">@Html.DisplayNameFor(model => model.Estatus)</dt>
+                        <dd class="col-sm-10 border rounded-2 d-inline-flex p-2">@Html.DisplayFor(model => model.Estatus.NombreEstatus)</dd>
+                    
+                </div>
+            </dl>
+        </div>
     </div>
     <hr />
 
