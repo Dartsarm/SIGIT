@@ -3,16 +3,30 @@
 @{
     ViewData["Title"] = "Listado";
 }
+<div class="row">
+    <div class="col-md-8 align-content-md-around">
+        <h1>Listado</h1>
+    </div>
+    <div class="col-md-4 align-content-md-around">
+        <div class="container-fluid">
+            <form asp-controller="Empleados" asp-action="Listado" method="get" class="d-flex" role="search">
+                <input class="form-control me-2 form-control-sm" type="search" name="buscar" placeholder="Nombres o Cédula" aria-label="Buscar" value="@ViewData["CurrentFilter"]" />
+                <button class="btn btn-outline-success btn-sm" type="submit"><i class="bi bi-search"></i> Buscar</button>
+            </form>
+        </div>
+    </div>
+</div>
 
-<h1>Listado</h1>
+@if (User.IsInRole("Administrador") || User.IsInRole("Técnico"))
+{
 
-@if (User.IsInRole("Administrador") || User.IsInRole ("Técnico")){
-
-<p>
+    <p>
         <a class="btn btn-outline-success btn-lg" data-bs-toggle="modal" data-bs-target="#genericModal" data-url="@Url.Action("Create", "Empleados")" data-title="Nuevo Usuario"><i class="bi bi-person-fill-add"></i></a>
 
-</p>
+    </p>
 }
+
+
 <table class="table table-striped table-hover">
     <thead>
         <tr>
@@ -60,18 +74,20 @@
                     @Html.DisplayFor(modelItem => item.Estatus)
                 </td>
                 <td>
-                    
-                    <a class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#genericModal" data-url="@Url.Action("Edit", "Empleados", new { id = item.Id })" data-title="Editar Empleado">
-                        <i class="bi bi-pencil-square"></i></a>
+
+                    <a class="btn btn-outline-warning" data-bs-toggle="modal" data-bs-target="#genericModal" data-url="@Url.Action("Edit", "Empleados", new { id = item.Id })" data-title="Editar Empleado">
+                        <i class="bi bi-pencil-square"></i>
+                    </a>
 
                     <a class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#genericModal" data-url="@Url.Action("Details", "Empleados", new { id = item.Id })" data-title="Detalles del empleado">
-                        <i class="bi bi-ui-checks"></i></a>
+                        <i class="bi bi-ui-checks"></i>
+                    </a>
 
                     @if (User.IsInRole("Administrador"))
                     {
                         <a class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#genericModal" data-url="@Url.Action("Delete", "Empleados", new { id = item.Id })" data-title="Eliminar Empleado"><i class="bi bi-x-square-fill"></i></a>
                     }
-                    
+
                 </td>
             </tr>
         }
@@ -133,7 +149,7 @@
 
                 // Esta línea comprueba si el formulario es válido (ej. si la fecha requerida fue llenada) ANTES de intentar enviar al servidor.
                 if (!form.valid()) {
-                    return; 
+                    return;
                 }
 
                 var url = form.attr('action');
@@ -164,5 +180,5 @@
             });
         });
     </script>
-    
+
 }

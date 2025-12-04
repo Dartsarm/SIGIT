@@ -6,8 +6,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using SIGIT.Models;
-// Asegúrate de tener esta importación si usas Json
-using Newtonsoft.Json; // O System.Text.Json; si estás en .NET Core 3.1+
+
+using Newtonsoft.Json; 
 
 namespace SIGIT.Controllers
 {
@@ -148,7 +148,7 @@ namespace SIGIT.Controllers
             }
 
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index)); // Sigue redirigiendo, ya que Delete es una página completa
+            return RedirectToAction(nameof(Index));
         }
 
         private bool CargoExists(int id)

@@ -35,14 +35,34 @@ namespace SIGIT.Controllers
 
         // Listado de la pagina inicial de empleados
         // GET: Empleados/Listado
-        public async Task<IActionResult> Listado()
+        // Acepta el parámetro de búsqueda y lo usa para filtrar la consulta
+        public async Task<IActionResult> Listado(string buscar)
         {
-            var empleadosDesdeBD = await _context.Empleados
+            // 1. Consulta base con todos los Includes necesarios
+            var empleadosQuery = _context.Empleados
                 .Include(e => e.Area)
                 .Include(e => e.Cargo)
                 .Include(e => e.Ciudad)
+                .Include(e => e.Compania)
                 .Include(e => e.Estatus)
-                .ToListAsync();
+                .AsQueryable(); // Convertir a IQueryable para poder añadir el filtro
+
+            // 2. Aplicar filtro si se proporcionó un término de búsqueda
+            if (!string.IsNullOrEmpty(buscar))
+            {
+                string searchTrim = buscar.Trim().ToLower(); // Normalizar el término de búsqueda
+
+                empleadosQuery = empleadosQuery.Where(e =>
+                    e.Cedula.ToLower().Contains(searchTrim) ||
+                    e.Nombre.ToLower().Contains(searchTrim) ||
+                    (e.SegundoNombre != null && e.SegundoNombre.ToLower().Contains(searchTrim)) ||
+                    e.Apellido.ToLower().Contains(searchTrim) ||
+                    (e.SegundoApellido != null && e.SegundoApellido.ToLower().Contains(searchTrim))
+                );
+            }
+
+            // 3. Ejecutar la consulta y mapear a ViewModel
+            var empleadosDesdeBD = await empleadosQuery.ToListAsync();
 
             var empleadosParaMostrar = empleadosDesdeBD.Select(e => new EmpleadoListadoViewModel
             {
@@ -54,6 +74,9 @@ namespace SIGIT.Controllers
                 Ciudad = e.Ciudad.NombreCiudad,
                 Estatus = e.Estatus.NombreEstatus
             }).ToList();
+
+            // Guardamos el término de búsqueda para mantenerlo en la caja después de la búsqueda
+            ViewData["CurrentFilter"] = buscar;
 
             return View(empleadosParaMostrar);
         }
@@ -98,8 +121,13 @@ namespace SIGIT.Controllers
         [Authorize(Roles = "Administrador, Técnico")]
         public async Task<IActionResult> Create([Bind("EmpleadoId,Cedula,Nombre,SegundoNombre,Apellido,SegundoApellido,Celular,CorreoPersonal,CargoId,AreaId,CiudadId,CompaniaId,EstatusId,FechaIngreso,FechaRetiro")] Empleado empleado)
         {
+            // Asigna la fecha de registro del sistema
             empleado.FechaRegistro = DateTime.Now;
+
+            // Quita el error de FechaRegistro del ModelState
             ModelState.Remove("FechaRegistro");
+
+            // Le decimos al validador que ignore los objetos de navegación nulos, ya que solo nos interesan los IDs (AreaId, CargoId, etc.)
             ModelState.Remove("Area");
             ModelState.Remove("Cargo");
             ModelState.Remove("Ciudad");
@@ -110,9 +138,10 @@ namespace SIGIT.Controllers
             {
                 _context.Add(empleado);
                 await _context.SaveChangesAsync();
-                return Json(new { success = true });
+                return Json(new { success = true }); // Devuelve ÉXITO
             }
 
+            // Repoblamos los dropdowns y devolvemos la vista con los errores.
             await PopulateDropdowns(empleado);
             return PartialView(empleado);
         }
@@ -132,7 +161,9 @@ namespace SIGIT.Controllers
                 return NotFound();
             }
 
+            // Llama al método para llenar los dropdowns con los valores actuales del empleado
             await PopulateDropdowns(empleado);
+            // Devuelve Vista Parcial para el modal
             return PartialView(empleado);
         }
 
@@ -147,7 +178,10 @@ namespace SIGIT.Controllers
                 return NotFound();
             }
 
+            // Quita el error de FechaRegistro del ModelState (no se envía desde el form)
             ModelState.Remove("FechaRegistro");
+
+            // Aplicamos la misma corrección que en el Create
             ModelState.Remove("Area");
             ModelState.Remove("Cargo");
             ModelState.Remove("Ciudad");
@@ -364,7 +398,7 @@ namespace SIGIT.Controllers
             if (empleado == null)
             {
                 // Mensaje vago por seguridad: no decimos si la cédula existe o no.
-                return Json(new { success = false, message = "Procesando solicitud. Si la cédula existe, el correo será enviado." });
+                return Json(new { success = true, message = "Procesando solicitud. Si la cédula existe, el correo será enviado." });
             }
 
             try
@@ -401,7 +435,7 @@ namespace SIGIT.Controllers
                 bodyBuilder.AppendLine($"Ciudad: {empleado.Ciudad?.NombreCiudad}");
                 bodyBuilder.AppendLine($"Compañía: {empleado.Compania?.NombreCompania}");
                 bodyBuilder.AppendLine();
-                bodyBuilder.AppendLine("CUENTAS ASIGNADAS:");
+                bodyBuilder.AppendLine("--- CUENTAS ASIGNADAS ---");
 
                 foreach (var cuenta in empleado.CuentasEmpleados)
                 {
@@ -423,7 +457,7 @@ namespace SIGIT.Controllers
                 var mailMessage = new MailMessage
                 {
                     From = new MailAddress(senderEmail, senderName),
-                    Subject = "Credenciales acceso aplicaciones Autofinanciera - Fonbienes",
+                    Subject = "Credenciales acceso aplicaciones SIGIT",
                     Body = emailBody,
                     IsBodyHtml = false
                 };
@@ -438,8 +472,7 @@ namespace SIGIT.Controllers
             }
             catch (Exception)
             {
-                // Si el envío falla por cualquier razón (ej. SMTP no conecta), 
-                // devolvemos el mismo mensaje de éxito vago para no dar pistas al atacante.
+                // En caso de fallo de envío, devolvemos el mismo mensaje de éxito vago
                 return Json(new { success = true, message = "Procesando solicitud. Si la cédula es correcta, el correo será enviado a tu cuenta personal." });
             }
         }

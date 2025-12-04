@@ -4,7 +4,19 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Usuarios y Cuentas</h1>
+<div class="row">
+    <div class="col-md-8 align-content-md-around">
+        <h1>Cuentas de usuarios</h1>
+    </div>
+    <div class="col-md-4 align-content-md-around">
+        <div class="container-fluid">
+            <form class="d-flex" role="search">
+                <input class="form-control me-2" type="search" placeholder="Buscar" aria-label="Buscar" />
+                <button class="btn btn-outline-success" type="submit">Buscar</button>
+            </form>
+        </div>
+    </div>
+</div>
 
 @if (User.IsInRole("Administrador") || User.IsInRole("Técnico"))
 {
